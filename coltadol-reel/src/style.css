@@ -406,6 +406,7 @@ canvas {
   padding: 0 32px 34px;
 }
 .msg {
+  flex: none;
   overflow: hidden;
 }
 .msg .row {
