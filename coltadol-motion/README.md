@@ -4,7 +4,8 @@ Une publicité verticale de 28 s pour Instagram Reels, TikTok et YouTube Shorts 
 
 | Fichier | Usage |
 |---|---|
-| `export/coltadol-reel.mp4` | La vidéo finale, avec sa bande-son. |
+| `export/coltadol-reel-voix.mp4` | La vidéo avec voix off française. |
+| `export/coltadol-reel.mp4` | La vidéo finale, avec sa bande-son, sans voix. |
 | `export/coltadol-silent.mp4` | La même sans son, pour poser un son tendance sur TikTok ou Instagram. |
 | `export/coltadol-poster.jpg` | La dernière image (logo + CTA), comme couverture. |
 | `export/coltadol-storyboard.jpg` | 12 images du film sur une planche. |
@@ -44,6 +45,19 @@ Tout vient du dépôt `real-estate-saas-frontend` (le site et la console) :
 - **Lumière** : une couche canvas en fusion `screen` porte les halos, ondes de choc, étincelles, lignes de vitesse et faisceaux de balayage. Un voile sombre se place sous les grands titres, et le grain argentique est ajouté par FFmpeg (bruit temporel, ce qui évite aussi le banding des dégradés en H.264).
 - **Encodage** : conversion RGB → YUV en BT.709 avec les métadonnées associées (couleurs justes sur téléphone), H.264 High en CRF 18 plafonné à 14 Mb/s, une image clé toutes les 2 s et `faststart`, ce qui correspond à ce que recompressent Instagram, TikTok et YouTube. Le master sans perte (`out/master.mkv`) est conservé : `node scripts/render.mjs --encode-only` réencode sans refaire le rendu.
 - **Son** : `scripts/audio.mjs` synthétise toute la bande-son (oscillateurs, bruit, filtres, réverbération, sans aucun échantillon) à partir des repères de `src/timeline.js`. Chaque notification, onde, clic et impact tombe donc sur son image. La musique est un bourdon tendu avec une horloge, puis un groove à 120 BPM (Fa – Do – Sol – Lam) avec ducking sous la grosse caisse, et enfin un accord final sur le logo. Le mixage est normalisé à −14 LUFS.
+
+## Voix off
+
+`export/coltadol-reel-voix.mp4` ajoute une voix off française, avec une phrase par plan :
+
+> Vingt-trois heures quarante-sept. Agence fermée. · Ils écrivent à toute heure. · Leurs besoins s'éparpillent. · Et des prospects s'oublient. · Coltadol répond. À chaque demande. · Chaque conversation devient un prospect qualifié. · Tous vos prospects, classés et suivis. · Les silences deviennent des relances. Rien ne part sans vous. · Chaque matin, vous savez qui appeler. · Coltadol. Votre responsable commercial IA.
+
+- **Gratuite** : la synthèse est faite en local avec [Piper](https://github.com/rhasspy/piper) (open source, licence MIT) et sa voix française `fr_FR-siwis-medium`. C'est une voix féminine claire et posée, la seule des voix testées qui tienne dans tous les plans sans accélération.
+- **Vérifiée** : chaque prise a été retranscrite par Whisper (en local), et seules les prises entendues exactement comme écrites ont été gardées, marque comprise. Le mix final retranscrit donne les 10 phrases dans l'ordre, au bon moment.
+- **Mixage** (`scripts/voiceover.mjs`) : nettoyage de la voix (passe-haut, égalisation, compression, légère ambiance), musique et effets qui baissent automatiquement sous la voix (sidechain), puis −14 LUFS avec limiteur.
+- **Crédit** : la voix siwis est entraînée sur la *SIWIS French Speech Synthesis Database* (Université d'Édimbourg), sous licence CC-BY 4.0. L'usage commercial est autorisé avec mention de la source.
+
+Les prises validées sont dans `assets/voice/`. Pour refaire le mix : `node scripts/voiceover.mjs`, après `npm run build`.
 
 ## Reproduire le rendu
 
