@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Coltadol — Reel 9:16</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="bg" width="1080" height="1920"></canvas>
+
+      <div id="world">
+        <!-- ======================================================= S1 HOOK -->
+        <section id="s1" class="scene">
+          <p id="s1-k1" class="abs centered title split" style="top: 300px; font-size: 60px" data-text="Votre agence est fermée."></p>
+          <p id="s1-k2" class="abs centered title split" style="top: 300px; font-size: 60px" data-text="Vos prospects, *eux,* écrivent."></p>
+          <div id="clock1" class="abs centered odo display" style="top: 410px; font-size: 330px"></div>
+          <div id="notifs"></div>
+        </section>
+
+        <!-- ====================================================== S2 SWARM -->
+        <section id="s2" class="scene">
+          <div id="swarm" class="abs" style="inset: 0; transform-style: preserve-3d"></div>
+          <h2 id="s2-l1" class="abs centered display split" style="top: 780px; font-size: 168px" data-text="Ils écrivent&#10;*à toute heure.*"></h2>
+          <h2 id="s2-l2" class="abs centered display split" style="top: 780px; font-size: 168px" data-text="Les besoins&#10;*s'éparpillent.*"></h2>
+          <h2 id="s2-l3" class="abs centered display split" style="top: 780px; font-size: 168px" data-text="Des prospects&#10;*s'oublient.*"></h2>
+        </section>
+
+        <!-- ===================================================== S3 REVEAL -->
+        <section id="s3" class="scene">
+          <svg id="mark" class="abs" viewBox="0 0 32 32" fill="none" style="width: 300px; height: 300px; left: 0; top: 0; overflow: visible">
+            <path id="mark-ring" d="M23.55 7.71a10.5 10.5 0 1 0 0 14.58" stroke="#eef0fa" stroke-width="4" stroke-linecap="round" />
+            <path id="mark-tail" d="M6.9 20.25 4.5 28l6.25-3.9Z" fill="#eef0fa" stroke="#eef0fa" stroke-width="1.6" stroke-linejoin="round" />
+            <circle id="mark-dot" cx="26.2" cy="15" r="3.8" fill="#5ce6a5" />
+          </svg>
+          <h2 id="s3-title" class="abs centered display split" style="top: 930px; font-size: 150px" data-text="Chaque demande&#10;*a sa réponse.*"></h2>
+          <p id="s3-sub" class="abs centered" style="top: 1230px; font-size: 38px; line-height: 1.4; color: var(--haze)">
+            Sur WhatsApp, dans la langue du prospect,<br />à 23 h 47 comme à 9 h.
+          </p>
+          <div id="s3-log" class="abs pill" style="top: 1370px; left: 0; padding: 18px 30px; font-size: 30px; border: 2px solid var(--hairline); background: rgb(11 17 48 / 0.7)">
+            <span id="s3-log-dot" class="dot"></span>
+            <span>Lyon · répondu en 4 s</span>
+          </div>
+        </section>
+
+        <!-- ==================================================== S4 QUALIFY -->
+        <section id="s4" class="scene">
+          <p id="s4-k" class="abs kicker" style="left: 64px; top: 330px">Qualification automatique</p>
+          <h2 id="s4-title" class="abs title split" style="left: 64px; top: 380px; font-size: 88px" data-text="Une conversation devient&#10;un prospect *qualifié.*"></h2>
+
+          <div id="phone" class="phone pane" style="left: 70px; top: 610px; width: 720px; height: 860px">
+            <div class="ph-head">
+              <span class="avatar">AG</span>
+              <div>
+                <p class="ph-title">Votre agence sur WhatsApp</p>
+                <p class="ph-status">Coltadol répond</p>
+              </div>
+            </div>
+            <div class="thread" id="thread"></div>
+          </div>
+
+          <div id="dossier" class="dossier pane" style="left: 54px; top: 620px; width: 972px">
+            <div class="d-head">
+              <div>
+                <p class="d-sub">Nouveau prospect WhatsApp</p>
+                <p class="d-num title">+33 6 •• •• 41 18</p>
+              </div>
+              <span class="status">
+                <span id="st-new" class="haze">Nouveau</span>
+                <span id="st-ok" class="hl" style="visibility: hidden">Qualifié</span>
+              </span>
+            </div>
+            <dl class="fields" id="fields"></dl>
+            <div class="d-foot">
+              <div class="ring" id="ring">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.14)" stroke-width="8" />
+                  <circle id="ring-arc" cx="60" cy="60" r="52" fill="none" stroke="#5ce6a5" stroke-width="8" stroke-linecap="round" />
+                  <line x1="60" y1="3" x2="60" y2="15" stroke="#ffb347" stroke-width="2.5" transform="rotate(252 60 60)" />
+                </svg>
+                <div class="num">
+                  <b id="ring-num" class="display">0</b>
+                  <small>score</small>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 0">
+                <span id="hot" class="pill hot">Prospect chaud</span>
+                <p class="haze" style="margin-top: 14px; font-size: 22px">Chaud dès 70, ou si l'urgence est haute</p>
+                <p class="haze" style="margin-top: 26px; font-size: 23px">Informations manquantes</p>
+                <div class="missing" id="missing">
+                  <span class="mp" data-m="type">type de bien</span>
+                  <span class="mp" data-m="city">ville</span>
+                  <span class="mp" data-m="intent">achat ou location</span>
+                  <span class="mp" data-m="budget">budget</span>
+                  <span id="none-missing" class="abs hl" style="left: 0; top: 10px; font-size: 30px; font-weight: 600">✓ Rien ne manque</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================== S5 RECOVERY -->
+        <section id="s5" class="scene">
+          <p id="s5-k" class="abs kicker amber" style="left: 64px; top: 330px">Lead Recovery</p>
+          <h2 id="s5-title" class="abs title split" style="left: 64px; top: 380px; font-size: 88px" data-text="Les prospects qui se taisent&#10;*vous reviennent.*"></h2>
+
+          <div id="queue" class="queue pane" style="left: 54px; top: 620px; width: 972px">
+            <div class="q-head">
+              <p class="q-title">Relances IA</p>
+              <p class="q-count">2 prospects demandent votre attention</p>
+            </div>
+
+            <div class="item" id="it-karim">
+              <div class="i-top">
+                <span class="avatar">KB</span>
+                <span class="i-name">Karim B.</span>
+                <span class="pill prio high" id="karim-prio">Chaud</span>
+                <span class="i-when" id="karim-when">il y a 24 h</span>
+              </div>
+              <span class="pill silence" id="karim-silence">Sans réponse depuis <b id="karim-h">24</b> h</span>
+              <p class="i-reason" id="karim-reason">Prospect chaud sans réponse de l'agence depuis 26 heures.</p>
+              <div class="suggest" id="suggest">
+                <p class="s-label">Message suggéré</p>
+                <p class="s-text" id="s-text"></p>
+                <div class="send" id="send">
+                  <span id="send-a" style="background: var(--signal); color: var(--night); inset: 0; position: absolute; justify-content: center">Envoyer depuis le WhatsApp connecté</span>
+                  <span id="send-b" style="background: rgb(92 230 165 / 0.14); color: var(--signal); inset: 0; position: absolute; justify-content: center; border: 2px solid rgb(92 230 165 / 0.5); border-radius: 999px">✓ Relance envoyée</span>
+                  <span class="tap" id="tap"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" id="it-lea">
+              <div class="i-top">
+                <span class="avatar">LD</span>
+                <span class="i-name">Léa D.</span>
+                <span class="pill prio medium">Tiède</span>
+                <span class="i-when">il y a 4 jours</span>
+              </div>
+              <p class="i-reason">Prospect (score 64) inactif depuis 4 jours.</p>
+            </div>
+          </div>
+          <p id="s5-note" class="abs centered haze" style="top: 1500px; font-size: 30px">Vous validez. Rien ne part sans vous.</p>
+        </section>
+
+        <!-- ===================================================== S6 MORNING -->
+        <section id="s6" class="scene">
+          <p id="s6-k0" class="abs centered title split" style="top: 560px; font-size: 60px" data-text="Le lendemain matin,"></p>
+          <div id="clock2" class="abs centered odo display" style="top: 660px; font-size: 330px"></div>
+          <p id="s6-k" class="abs kicker" style="left: 64px; top: 330px">08:00 · Rapport directeur</p>
+          <h2 id="s6-title" class="abs title split" style="left: 64px; top: 380px; font-size: 88px" data-text="Qui appeler.&#10;*Quoi proposer.*"></h2>
+
+          <div id="report-notif" class="notif" style="top: 1140px">
+            <div class="n-icon brand"><svg viewBox="0 0 32 32" width="62" height="62" fill="none"><path d="M23.55 7.71a10.5 10.5 0 1 0 0 14.58" stroke="#eef0fa" stroke-width="4" stroke-linecap="round" /><path d="M6.9 20.25 4.5 28l6.25-3.9Z" fill="#eef0fa" stroke="#eef0fa" stroke-width="1.6" stroke-linejoin="round" /><circle cx="26.2" cy="15" r="3.8" fill="#5ce6a5" /></svg></div>
+            <div class="n-body">
+              <div class="n-head"><span>WhatsApp · Coltadol</span><span>08:00</span></div>
+              <div class="n-from">Rapport directeur</div>
+              <div class="n-text">3 prospects chauds à prioriser, 2 relances en retard, 5 biens à proposer.</div>
+            </div>
+          </div>
+
+          <div id="report" class="report pane" style="left: 54px; top: 620px; width: 972px">
+            <p class="greet">Bonjour. Voici ce qui demande votre attention.</p>
+            <div class="metrics">
+              <div class="metric"><b class="display" data-count="12">0</b><span>Nouveaux prospects</span></div>
+              <div class="metric"><b class="display hl-amber" data-count="3">0</b><span>Prospects chauds</span></div>
+              <div class="metric"><b class="display" data-count="2">0</b><span>Relances en retard</span></div>
+              <div class="metric"><b class="display hl" data-count="5">0</b><span>Biens à proposer</span></div>
+            </div>
+            <p class="list-title">Prospects prioritaires</p>
+            <div id="prows"></div>
+          </div>
+
+          <div id="match" class="match pane" style="left: 250px; top: 1330px; width: 780px">
+            <div class="sring" style="width: 120px; height: 120px">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.14)" stroke-width="10" />
+                <circle id="match-arc" cx="60" cy="60" r="52" fill="none" stroke="#5ce6a5" stroke-width="10" stroke-linecap="round" />
+              </svg>
+              <b id="match-num" class="display" style="font-size: 44px">0</b>
+            </div>
+            <div>
+              <p class="haze" style="font-size: 24px">Meilleur match · +33 6 •• •• 41 18</p>
+              <p style="font-size: 34px; font-weight: 700; margin-top: 4px">T3 avec balcon, Lyon 6e</p>
+              <p class="hl" style="font-size: 26px; margin-top: 4px; font-weight: 600">Match à 100 % · 342 000 €</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================= S7 OUTRO -->
+        <section id="s7" class="scene">
+          <svg id="lockup" class="abs" style="left: 120px; top: 560px; width: 840px"></svg>
+          <h2 id="s7-title" class="abs centered display split" style="top: 900px; font-size: 140px" data-text="Votre responsable&#10;commercial *IA.*"></h2>
+          <div id="feats" class="abs" style="left: 0; width: 1080px; top: 1170px; display: flex; justify-content: center; gap: 14px">
+            <span class="pill feat">Qualification WhatsApp</span>
+            <span class="pill feat">Relances</span>
+            <span class="pill feat">Rapport du matin</span>
+          </div>
+          <div id="cta" class="cta" style="top: 1270px">
+            Essai gratuit 14 jours
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+            <span class="shine" id="shine"></span>
+          </div>
+          <p id="url" class="abs centered display" style="top: 1430px; font-size: 64px; letter-spacing: 0.01em">coltadol.com</p>
+          <p id="fine" class="abs centered haze" style="top: 1512px; font-size: 27px">Sans carte bancaire · avec votre numéro WhatsApp actuel</p>
+        </section>
+
+        <!-- persistent brand bug -->
+        <svg id="bug" class="bug" viewBox="2 0 112.2 30"></svg>
+        <!-- flying data chips (screen space) -->
+        <div id="chips" class="abs" style="inset: 0"></div>
+        <p id="caption" class="abs centered" style="top: 1572px; font-size: 22px; color: rgb(143 152 198 / 0.7)">Conversations, prospects et chiffres d'exemple.</p>
+      </div>
+
+      <canvas id="fx" width="1080" height="1920"></canvas>
+      <div id="vignette"></div>
+      <canvas id="grain" width="1080" height="1920"></canvas>
+    </div>
+
+    <div id="controls">
+      <button id="play">▶︎ / ❚❚</button>
+      <input id="scrub" type="range" min="0" max="27" step="0.001" value="0" />
+      <span id="clock">0.00 s</span>
+    </div>
+
+    <script src="lib.js"></script>
+    <script src="timeline.js"></script>
+    <script src="background.js"></script>
+    <script src="scenes.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
