@@ -1,0 +1,205 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      color: #0b1130;
+      font-family: "DM Sans", sans-serif;
+    }
+    .veil {
+      position: absolute;
+      inset: 0;
+      background: rgb(243 244 250 / 0.86);
+      opacity: 0;
+    }
+    .chap {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 330px;
+      text-align: center;
+    }
+    .num {
+      display: inline-block;
+      font: 800 640px/0.9 "Bricolage", sans-serif;
+      letter-spacing: -0.04em;
+      opacity: 0;
+    }
+    .num span {
+      background: linear-gradient(180deg, #ffb347 8%, #5ce6a5 92%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 18px 30px rgb(11 17 48 / 0.18));
+    }
+    .chip {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 1000px;
+      text-align: center;
+    }
+    .chip span {
+      display: inline-block;
+      font: 800 66px/1 "Bricolage", sans-serif;
+      background: #5ce6a5;
+      padding: 14px 34px 18px;
+      border-radius: 28px;
+      box-shadow: 0 14px 34px rgb(11 17 48 / 0.18);
+      opacity: 0;
+    }
+    /* Le Rapport directeur reçu sur WhatsApp à 8 h (textes de lib/landing-i18n/fr.ts) */
+    #a-card {
+      position: absolute;
+      left: 80px;
+      top: 448px;
+      width: 920px;
+    }
+    #a-card-in {
+      background: #fff;
+      border-radius: 36px;
+      padding: 30px 36px 28px;
+      box-shadow: 0 30px 70px rgb(11 17 48 / 0.2), 0 4px 10px rgb(11 17 48 / 0.08);
+      opacity: 0;
+    }
+    .a-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font: 700 26px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .a-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .a-wa i {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #25d366;
+      display: inline-block;
+    }
+    .a-title {
+      margin-top: 18px;
+      font: 800 50px/1 "Bricolage", sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .a-hello {
+      margin-top: 10px;
+      font: 500 29px/1.25 "DM Sans", sans-serif;
+      color: #3a4166;
+    }
+    .a-line {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #f4f5fa;
+      border-radius: 22px;
+      padding: 16px 20px;
+      opacity: 0;
+    }
+    .a-score {
+      min-width: 74px;
+      height: 56px;
+      border-radius: 18px;
+      background: #ffb347;
+      display: grid;
+      place-items: center;
+      font: 800 34px/1 "Bricolage", sans-serif;
+    }
+    .a-who {
+      flex: 1;
+      font: 700 30px/1.15 "DM Sans", sans-serif;
+    }
+    .a-who small {
+      display: block;
+      margin-top: 4px;
+      font: 500 25px/1.1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .a-hot {
+      font: 700 27px/1 "DM Sans", sans-serif;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgb(255 179 71 / 0.3);
+    }
+    .a-match {
+      background: rgb(92 230 165 / 0.22);
+    }
+    .a-match .a-score {
+      background: #5ce6a5;
+      font-size: 26px;
+      min-width: 96px;
+    }
+    .a-foot {
+      margin-top: 16px;
+      font: 600 23px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+      text-align: right;
+    }
+  </style>
+  <div id="root" data-composition-id="appeler" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="a-veil" class="veil"></div>
+    <div id="a-chap" class="clip chap" data-start="0" data-duration="1.15" data-track-index="0">
+      <div id="a-num" class="num"><span>3</span></div>
+    </div>
+    <div id="a-chip" class="clip chip" data-start="0" data-duration="1.15" data-track-index="1">
+      <span id="a-chip-s">Qui appeler</span>
+    </div>
+    <div id="a-card" class="clip" data-start="1.1" data-duration="2.5" data-track-index="0">
+      <div id="a-card-in">
+        <div class="a-top"><span class="a-wa"><i></i>WhatsApp</span><span>08:00</span></div>
+        <div class="a-title">Rapport directeur</div>
+        <div class="a-hello">Bonjour. Voici ce qui demande votre attention.</div>
+        <div id="a-l1" class="a-line">
+          <div class="a-score">92</div>
+          <div class="a-who">+33 6 •• •• 41 18<small>Achat · T3 · Lyon 6e</small></div>
+          <span class="a-hot">Chaud</span>
+        </div>
+        <div id="a-l2" class="a-line">
+          <div class="a-score">74</div>
+          <div class="a-who">Sarah M.<small>Location · T4 · Villeurbanne</small></div>
+          <span class="a-hot">Chaud</span>
+        </div>
+        <div id="a-l3" class="a-line a-match">
+          <div class="a-score">100 %</div>
+          <div class="a-who">T3 avec balcon, Lyon 6e<small>Bien à proposer · 342 000 €</small></div>
+        </div>
+        <div class="a-foot">Rapport d'exemple : chiffres, noms et biens fictifs.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#a-veil", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power2.out" }, 0);
+      tl.fromTo("#a-num", { opacity: 0, scale: 0.55, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 0.04);
+      tl.fromTo("#a-chip-s", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.42, ease: "back.out(2.2)" }, 0.24);
+      tl.to("#a-num", { opacity: 0, scale: 1.28, filter: "blur(16px)", duration: 0.22, ease: "power3.in" }, 0.9);
+      tl.to("#a-chip-s", { opacity: 0, scale: 0.8, duration: 0.18, ease: "power3.in" }, 0.92);
+      tl.to("#a-veil", { opacity: 0, duration: 0.28, ease: "power2.inOut" }, 0.92);
+
+      // 08:00 — la notification arrive d'en haut, les lignes se posent une à une
+      tl.fromTo("#a-card-in", { opacity: 0, y: -90, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out" }, 1.15);
+      ["#a-l1", "#a-l2", "#a-l3"].forEach((s, i) => {
+        tl.fromTo(s, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.32, ease: "power3.out" }, 1.5 + i * 0.16);
+      });
+      tl.to("#a-card-in", { opacity: 0, y: -40, filter: "blur(8px)", duration: 0.2, ease: "power3.in" }, 3.38);
+      window.__timelines["appeler"] = tl;
+    })();
+  </script>
+</template>

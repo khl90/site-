@@ -1,0 +1,117 @@
+<!doctype html>
+<html
+  lang="fr"
+  data-composition-variables='[
+    {"id":"color-ink","type":"color","label":"Encre (night)","default":"#0b1130"},
+    {"id":"color-lamp","type":"color","label":"Ambre (en attente)","default":"#ffb347"},
+    {"id":"color-signal","type":"color","label":"Vert (répondu)","default":"#5ce6a5"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Coltadol — Deux agences</title>
+    <script src="assets/lib/gsap.min.js"></script>
+    <script src="assets/timeline.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #eef0f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="1920">
+      <!-- Le monde 3D : les deux agences, du premier au dernier plan -->
+      <div
+        id="world"
+        data-composition-id="world"
+        data-composition-src="compositions/world.html"
+        data-start="0"
+        data-duration="32"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 1"
+      ></div>
+      <!-- 1. La vitesse : chapitre, puis ×7 -->
+      <div
+        id="vitesse"
+        data-composition-id="vitesse"
+        data-composition-src="compositions/vitesse.html"
+        data-start="7.5"
+        data-duration="8"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 2"
+      ></div>
+      <!-- 2. Les silences : chapitre, puis la relance -->
+      <div
+        id="silences"
+        data-composition-id="silences"
+        data-composition-src="compositions/silences.html"
+        data-start="15.5"
+        data-duration="5.9"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 2"
+      ></div>
+      <!-- 3. Qui appeler : chapitre, puis le Rapport directeur de 8 h -->
+      <div
+        id="appeler"
+        data-composition-id="appeler"
+        data-composition-src="compositions/appeler.html"
+        data-start="21.4"
+        data-duration="3.6"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 2"
+      ></div>
+      <!-- Fin : la marque, le commentaire, le lien -->
+      <div
+        id="fin"
+        data-composition-id="fin"
+        data-composition-src="compositions/fin.html"
+        data-start="26.4"
+        data-duration="5.6"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 2"
+      ></div>
+      <!-- Les titres du haut, mot par mot -->
+      <div
+        id="titres"
+        data-composition-id="titres"
+        data-composition-src="compositions/titres.html"
+        data-start="0"
+        data-duration="32"
+        data-track-index="2"
+        data-track-kind="captions"
+        data-width="1080"
+        data-height="1920"
+        style="z-index: 3"
+      ></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,253 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      color: #0b1130;
+      font-family: "DM Sans", sans-serif;
+    }
+    /* La marque se dessine au-dessus de l'agence de Yasmine */
+    #f-mark {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 470px;
+      text-align: center;
+    }
+    #f-mark-in {
+      display: inline-block;
+      width: 300px;
+      height: 300px;
+      border-radius: 80px;
+      background: #fff;
+      box-shadow: 0 30px 70px rgb(11 17 48 / 0.22);
+      padding: 34px;
+      opacity: 0;
+    }
+    #f-veil {
+      position: absolute;
+      inset: 0;
+      background: rgb(243 244 250 / 0.82);
+      opacity: 0;
+    }
+    #f-dm {
+      position: absolute;
+      left: 90px;
+      top: 470px;
+      width: 900px;
+    }
+    #f-dm-in {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      background: #fff;
+      border-radius: 32px;
+      padding: 24px 28px;
+      box-shadow: 0 24px 60px rgb(11 17 48 / 0.2);
+      opacity: 0;
+    }
+    .f-ico {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffb347, #5ce6a5);
+      display: grid;
+      place-items: center;
+    }
+    .f-dm-t small {
+      display: block;
+      font: 600 24px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .f-dm-t b {
+      display: block;
+      margin-top: 8px;
+      font: 800 42px/1 "Bricolage", sans-serif;
+    }
+    #f-link {
+      position: absolute;
+      left: 90px;
+      top: 640px;
+      width: 900px;
+    }
+    #f-link-in {
+      background: #fff;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgb(11 17 48 / 0.22);
+      opacity: 0;
+    }
+    .f-hero {
+      height: 250px;
+      background:
+        radial-gradient(60% 90% at 15% 10%, rgb(255 179 71 / 0.35), transparent 70%),
+        radial-gradient(60% 90% at 90% 20%, rgb(92 230 165 / 0.35), transparent 70%),
+        #f4f5fa;
+      display: grid;
+      place-items: center;
+    }
+    .f-hero img {
+      width: 560px;
+      height: auto;
+    }
+    .f-body {
+      padding: 28px 34px 32px;
+    }
+    .f-url {
+      font: 700 28px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .f-tag {
+      margin-top: 12px;
+      font: 800 48px/1.08 "Bricolage", sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .f-cta {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .f-btn {
+      background: #5ce6a5;
+      border-radius: 20px;
+      padding: 18px 26px;
+      font: 800 32px/1 "Bricolage", sans-serif;
+    }
+    .f-fine {
+      font: 600 25px/1.2 "DM Sans", sans-serif;
+      color: #3a4166;
+    }
+    /* La barre de commentaire, tapée puis publiée */
+    #f-bar {
+      position: absolute;
+      left: 60px;
+      top: 1150px;
+      width: 960px;
+    }
+    #f-bar-in {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #121733;
+      border-radius: 999px;
+      padding: 16px 18px 16px 16px;
+      box-shadow: 0 20px 50px rgb(11 17 48 / 0.3);
+      opacity: 0;
+    }
+    .f-av {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c98e62, #3d4a8c);
+      flex: none;
+    }
+    .f-input {
+      position: relative;
+      flex: 1;
+      height: 70px;
+      border-radius: 999px;
+      border: 2px solid rgb(143 152 198 / 0.4);
+      font: 600 32px/66px "DM Sans", sans-serif;
+      padding: 0 26px;
+      color: #eef0fa;
+    }
+    #f-ph {
+      position: absolute;
+      left: 26px;
+      top: 0;
+      color: #8f98c6;
+    }
+    #f-typed {
+      position: absolute;
+      left: 26px;
+      top: 0;
+      letter-spacing: 0.04em;
+    }
+    #f-typed span {
+      opacity: 0;
+    }
+    #f-pub {
+      font: 800 30px/1 "DM Sans", sans-serif;
+      color: #5c6aa8;
+      padding: 0 14px;
+    }
+  </style>
+  <div id="root" data-composition-id="fin" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="f-mark" class="clip" data-start="0.2" data-duration="2.05" data-track-index="0">
+      <div id="f-mark-in">
+        <svg viewBox="0 0 32 32" width="232" height="232">
+          <path id="f-ring" fill="none" stroke="#0b1130" stroke-linecap="round" stroke-width="4" d="M23.55 7.71a10.5 10.5 0 1 0 0 14.58" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" />
+          <path id="f-tail" fill="#0b1130" stroke="#0b1130" stroke-linejoin="round" stroke-width="1.6" d="M6.9 20.25 4.5 28l6.25-3.9Z" opacity="0" />
+          <circle id="f-dot" cx="26.2" cy="15" r="3.8" fill="#5ce6a5" />
+        </svg>
+      </div>
+    </div>
+    <div id="f-veil" class="clip" data-start="2.15" data-duration="3.45" data-track-index="1"></div>
+    <div id="f-dm" class="clip" data-start="3.3" data-duration="2.3" data-track-index="2">
+      <div id="f-dm-in">
+        <div class="f-ico">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0b1130" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+        </div>
+        <div class="f-dm-t"><small>Nouveau message</small><b>Voilà le lien !</b></div>
+      </div>
+    </div>
+    <div id="f-link" class="clip" data-start="3.6" data-duration="2.0" data-track-index="3">
+      <div id="f-link-in">
+        <div class="f-hero"><img src="assets/brand/coltadol-logo-on-light.svg" alt="Coltadol" /></div>
+        <div class="f-body">
+          <div class="f-url">coltadol.com</div>
+          <div class="f-tag">Votre responsable commercial IA.</div>
+          <div class="f-cta"><span class="f-btn">Essai gratuit</span><span class="f-fine">14 jours gratuits, sans carte bancaire.</span></div>
+        </div>
+      </div>
+    </div>
+    <div id="f-bar" class="clip" data-start="2.2" data-duration="3.4" data-track-index="4">
+      <div id="f-bar-in">
+        <div class="f-av"></div>
+        <div class="f-input">
+          <span id="f-ph">Ajouter un commentaire…</span>
+          <span id="f-typed"><span id="f-c1">A</span><span id="f-c2">G</span><span id="f-c3">E</span><span id="f-c4">N</span><span id="f-c5">C</span><span id="f-c6">E</span></span>
+        </div>
+        <span id="f-pub">Publier</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // La marque : l'anneau se dessine, la queue se pose, le point vert tombe
+      tl.fromTo("#f-mark-in", { opacity: 0, scale: 0.7, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.22);
+      tl.fromTo("#f-ring", { attr: { "stroke-dashoffset": 110 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.55, ease: "power2.inOut" }, 0.4);
+      tl.fromTo("#f-tail", { opacity: 0, scale: 0.2, transformOrigin: "30% 70%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)" }, 0.85);
+      tl.fromTo("#f-dot", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.45)" }, 1.0);
+      tl.to("#f-mark-in", { opacity: 0, scale: 0.8, filter: "blur(10px)", duration: 0.22, ease: "power3.in" }, 2.0);
+
+      // Le commentaire « AGENCE », publié
+      tl.fromTo("#f-veil", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 2.15);
+      tl.fromTo("#f-bar-in", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 2.2);
+      tl.to("#f-ph", { opacity: 0, duration: 0.05 }, 2.55);
+      for (let i = 1; i <= 6; i++) tl.fromTo("#f-c" + i, { opacity: 0 }, { opacity: 1, duration: 0.03 }, 2.58 + (i - 1) * 0.075);
+      tl.to("#f-pub", { color: "#5ce6a5", duration: 0.1 }, 3.05);
+      tl.to("#f-pub", { scale: 0.88, duration: 0.08, ease: "power2.in" }, 3.12);
+      tl.to("#f-pub", { scale: 1, duration: 0.18, ease: "back.out(3)" }, 3.2);
+      tl.to("#f-bar-in", { y: 26, opacity: 0.0, duration: 0.3, ease: "power3.in" }, 3.3);
+
+      // La réponse arrive en message privé, avec le lien
+      tl.fromTo("#f-dm-in", { opacity: 0, y: -70, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "expo.out" }, 3.32);
+      tl.fromTo("#f-link-in", { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "expo.out" }, 3.62);
+      window.__timelines["fin"] = tl;
+    })();
+  </script>
+</template>

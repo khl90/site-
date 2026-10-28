@@ -1,0 +1,874 @@
+<template>
+  <script src="assets/lib/three.min.js"></script>
+  <script src="assets/lib/RoundedBoxGeometry.js"></script>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-ext-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+A720-A7FF;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "DM Sans", sans-serif;
+      color: #0b1130;
+    }
+    /* Ciel : trois couches (jour, nuit, matin) dont l'opacité suit l'heure du film. */
+    .w-sky {
+      position: absolute;
+      inset: 0;
+    }
+    #w-sky-day {
+      background:
+        radial-gradient(70% 34% at 18% 4%, rgb(255 179 71 / 0.30), transparent 70%),
+        radial-gradient(64% 30% at 86% 8%, rgb(92 230 165 / 0.26), transparent 70%),
+        linear-gradient(#f6f2f4 0%, #eef0f6 46%, #eef0f6 100%);
+    }
+    #w-sky-night {
+      background:
+        radial-gradient(60% 30% at 80% 10%, rgb(143 152 198 / 0.30), transparent 70%),
+        linear-gradient(#0b1130 0%, #1a2457 44%, #2a3470 100%);
+    }
+    #w-sky-morning {
+      background:
+        radial-gradient(80% 36% at 50% 2%, rgb(255 179 71 / 0.42), transparent 72%),
+        radial-gradient(60% 30% at 90% 14%, rgb(92 230 165 / 0.20), transparent 70%),
+        linear-gradient(#fbeee2 0%, #f3eff2 46%, #f1eff4 100%);
+    }
+    #w-gl {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+      display: block;
+    }
+    /* Étiquettes accrochées aux objets 3D : leur position est projetée à chaque image. */
+    .w-anchor {
+      position: absolute;
+      left: 0;
+      top: 0;
+      will-change: transform, opacity;
+      opacity: 0;
+    }
+    .w-pill {
+      background: #fff;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font: 700 28px/1 "DM Sans", sans-serif;
+      white-space: nowrap;
+      box-shadow: 0 10px 26px rgb(11 17 48 / 0.14), 0 2px 4px rgb(11 17 48 / 0.08);
+    }
+    .w-dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: 2px;
+    }
+    .w-bubble {
+      width: 372px;
+      background: #fff;
+      border-radius: 26px 26px 26px 8px;
+      padding: 18px 22px 14px;
+      box-shadow: 0 16px 40px rgb(11 17 48 / 0.22), 0 2px 6px rgb(11 17 48 / 0.10);
+    }
+    .w-bubble p {
+      font: 500 28px/1.22 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .w-meta {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font: 600 22px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .w-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font: 700 22px/1 "DM Sans", sans-serif;
+      color: #0b1130;
+    }
+    .w-state i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .w-wait {
+      background: rgb(255 179 71 / 0.28);
+    }
+    .w-wait i {
+      background: #ffb347;
+    }
+    .w-done {
+      background: rgb(92 230 165 / 0.32);
+    }
+    .w-done i {
+      background: #22b873;
+    }
+    .w-reply {
+      width: 372px;
+      background: #dcfbea;
+      border-radius: 26px 26px 8px 26px;
+      padding: 18px 22px 14px;
+      box-shadow: 0 16px 40px rgb(11 17 48 / 0.22);
+    }
+    .w-reply p {
+      font: 500 27px/1.22 "DM Sans", sans-serif;
+    }
+    .w-eq {
+      font: 800 92px/1 "Bricolage", sans-serif;
+      color: #0b1130;
+    }
+    .w-fly {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #5ce6a5;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px rgb(34 184 115 / 0.45);
+    }
+    .w-hot {
+      background: #fff;
+      border-radius: 999px;
+      padding: 9px 18px 9px 10px;
+      font: 700 32px/1 "DM Sans", sans-serif;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 26px rgb(11 17 48 / 0.16);
+    }
+    .w-hot b {
+      display: inline-grid;
+      place-items: center;
+      min-width: 60px;
+      height: 46px;
+      border-radius: 999px;
+      background: #ffb347;
+      font: 800 32px/1 "Bricolage", sans-serif;
+    }
+  </style>
+  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="w-sky-day" class="w-sky"></div>
+    <div id="w-sky-morning" class="w-sky" style="opacity: 0"></div>
+    <div id="w-sky-night" class="w-sky" style="opacity: 0"></div>
+    <canvas id="w-gl" width="1080" height="1920"></canvas>
+
+    <div id="w-eq" class="w-anchor w-eq">=</div>
+    <div id="w-stackY" class="w-anchor w-pill">Visites</div>
+    <div id="w-stackT" class="w-anchor w-pill">Visites</div>
+
+    <div id="w-msgY" class="w-anchor">
+      <div class="w-bubble">
+        <p>Le T3 près du parc est toujours disponible ?</p>
+        <div class="w-meta">
+          <span>23:47</span>
+          <span id="w-stateY-wait" class="w-state w-wait"><i></i>en attente</span>
+          <span id="w-stateY-done" class="w-state w-done" style="display: none"><i></i>répondu</span>
+        </div>
+      </div>
+    </div>
+    <div id="w-replyY" class="w-anchor">
+      <div class="w-reply">
+        <p>Bonjour ! Oui, il est toujours disponible. Vous cherchez à acheter ou à louer ?</p>
+        <div class="w-meta"><span>23:47</span><span>✓✓</span></div>
+      </div>
+    </div>
+    <div id="w-msgT" class="w-anchor">
+      <div class="w-bubble">
+        <p>Le T3 près du parc est toujours disponible ?</p>
+        <div class="w-meta">
+          <span>23:47</span>
+          <span class="w-state w-wait"><i></i>en attente</span>
+        </div>
+      </div>
+    </div>
+    <div id="w-tagT" class="w-anchor w-pill"><span class="w-dot" style="background: #ffb347"></span>Réponse le lendemain, 9:00</div>
+
+    <div id="w-ghostTag" class="w-anchor w-pill"><span class="w-dot" style="background: #b8bccb"></span>Silencieux depuis 3 jours</div>
+    <div id="w-silentTag" class="w-anchor w-pill"><span class="w-dot" style="background: #ffb347"></span>Silencieux depuis 3 jours</div>
+    <div id="w-sentTag" class="w-anchor w-pill"><span class="w-dot" style="background: #22b873"></span>Relance envoyée</div>
+    <div id="w-fly" class="w-anchor w-fly">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0b1130" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" /></svg>
+    </div>
+
+    <div id="w-hot1" class="w-anchor w-hot"><b>92</b>Chaud</div>
+    <div id="w-hot2" class="w-anchor w-hot"><b>74</b>Chaud</div>
+    <div id="w-match" class="w-anchor w-pill"><span class="w-dot" style="background: #22b873"></span>Match à 100 %</div>
+  </div>
+  <script>
+    (function () {
+      const W = 1080;
+      const H = 1920;
+      const { T, D } = window.CX;
+
+      // ------------------------------------------------------------ temps
+      const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+      const seg = (t, a, b) => clamp((t - a) / (b - a));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const outExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+      const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+      const inCubic = (x) => x * x * x;
+      const inOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      // Ressort amorti en forme fermée : chaque image se calcule seule.
+      function spring(x, zeta = 0.5, omega = 15) {
+        if (x <= 0) return 0;
+        const wd = omega * Math.sqrt(1 - zeta * zeta);
+        return 1 - Math.exp(-zeta * omega * x) * (Math.cos(wd * x) + ((zeta * omega) / wd) * Math.sin(wd * x));
+      }
+      // Apparaît en ressort à `a`, disparaît en 0,22 s à `b`.
+      const pop = (t, a, b = 1e9, z = 0.5) => spring(t - a, z) * (1 - inCubic(seg(t, b, b + 0.22)));
+      const fade = (t, a, b = 1e9, d = 0.2) => seg(t, a, a + d) * (1 - seg(t, b, b + d));
+
+      // L'heure du jour : 0 = jour, 1 = nuit ; « matin » réchauffe la lumière.
+      const night = (t) => inOut(seg(t, T.nightIn, T.nightFull)) * (1 - inOut(seg(t, T.dayIn, T.dayFull)));
+      const morning = (t) => inOut(seg(t, T.morningIn, T.morningFull)) * (1 - seg(t, T.same - 0.05, T.same));
+
+      // ------------------------------------------------------------ rendu
+      THREE.ColorManagement.legacyMode = false;
+      const canvas = document.getElementById("w-gl");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      const scene = new THREE.Scene();
+      const DAY_FOG = new THREE.Color("#eef0f6");
+      const NIGHT_FOG = new THREE.Color("#2a3470");
+      const MORNING_FOG = new THREE.Color("#f1eff4");
+      scene.fog = new THREE.Fog(DAY_FOG.clone(), 34, 95);
+      const cam = new THREE.PerspectiveCamera(30, W / H, 0.5, 300);
+
+      const hemi = new THREE.HemisphereLight("#ffffff", "#c9cbe0", 0.9);
+      scene.add(hemi);
+      const sun = new THREE.DirectionalLight("#fff6ea", 1.25);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      Object.assign(sun.shadow.camera, { left: -11, right: 11, top: 11, bottom: -11, near: 1, far: 60 });
+      sun.shadow.bias = -0.0006;
+      sun.shadow.normalBias = 0.02;
+      scene.add(sun, sun.target);
+
+      // ------------------------------------------------------------ matières
+      const mats = {};
+      function clay(hex, rough = 0.82) {
+        const k = hex + ":" + rough;
+        if (!mats[k]) mats[k] = new THREE.MeshStandardMaterial({ color: hex, roughness: rough, metalness: 0 });
+        return mats[k];
+      }
+      function mesh(geo, mat, x = 0, y = 0, z = 0, parent = scene) {
+        const m = new THREE.Mesh(geo, mat);
+        m.position.set(x, y, z);
+        m.castShadow = true;
+        m.receiveShadow = true;
+        parent.add(m);
+        return m;
+      }
+      const rbox = (w, h, d, r = 0.1, s = 4) => new THREE.RoundedBoxGeometry(w, h, d, s, r);
+
+      function canvasTex(w, h, draw) {
+        const c = document.createElement("canvas");
+        c.width = w;
+        c.height = h;
+        draw(c.getContext("2d"), w, h);
+        const tex = new THREE.CanvasTexture(c);
+        tex.encoding = THREE.sRGBEncoding;
+        tex.anisotropy = 8;
+        return tex;
+      }
+      function roundRect(g, x, y, w, h, r) {
+        g.beginPath();
+        g.moveTo(x + r, y);
+        g.arcTo(x + w, y, x + w, y + h, r);
+        g.arcTo(x + w, y + h, x, y + h, r);
+        g.arcTo(x, y + h, x, y, r);
+        g.arcTo(x, y, x + w, y, r);
+        g.closePath();
+      }
+      const radialTex = canvasTex(256, 256, (g, w, h) => {
+        const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+        gr.addColorStop(0, "rgba(255,255,255,1)");
+        gr.addColorStop(0.45, "rgba(255,255,255,0.45)");
+        gr.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, w, h);
+      });
+      const shadowTex = canvasTex(256, 256, (g, w, h) => {
+        const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+        gr.addColorStop(0, "rgba(11,17,48,0.55)");
+        gr.addColorStop(0.5, "rgba(11,17,48,0.22)");
+        gr.addColorStop(1, "rgba(11,17,48,0)");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, w, h);
+      });
+      function blob(w, d, x, z, op = 0.5, parent = scene) {
+        const m = new THREE.Mesh(
+          new THREE.PlaneGeometry(w, d),
+          new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: op }),
+        );
+        m.rotation.x = -Math.PI / 2;
+        m.position.set(x, 0.012, z);
+        m.renderOrder = 1;
+        parent.add(m);
+        return m;
+      }
+
+      // ------------------------------------------------------------ sol et trottoir
+      // le sol s'efface au loin : le ciel CSS prend le relais, sans ligne d'horizon
+      const groundAlpha = canvasTex(512, 512, (g, w, h) => {
+        const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+        gr.addColorStop(0, "#fff");
+        gr.addColorStop(0.32, "#fff");
+        gr.addColorStop(0.8, "#000");
+        gr.addColorStop(1, "#000");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, w, h);
+      });
+      groundAlpha.encoding = THREE.LinearEncoding;
+      const groundMat = new THREE.MeshStandardMaterial({ color: "#eceef5", roughness: 1, transparent: true, alphaMap: groundAlpha, depthWrite: false });
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(220, 220), groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+      const tileTex = canvasTex(512, 512, (g, w, h) => {
+        g.fillStyle = "#f6f7fb";
+        g.fillRect(0, 0, w, h);
+        g.strokeStyle = "#dfe2ec";
+        g.lineWidth = 6;
+        for (let i = 0; i <= 4; i++) {
+          g.beginPath();
+          g.moveTo((i * w) / 4, 0);
+          g.lineTo((i * w) / 4, h);
+          g.stroke();
+          g.beginPath();
+          g.moveTo(0, (i * h) / 4);
+          g.lineTo(w, (i * h) / 4);
+          g.stroke();
+        }
+      });
+      tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping;
+      tileTex.repeat.set(9, 1.3);
+      const walkMat = new THREE.MeshStandardMaterial({ map: tileTex, roughness: 0.95 });
+      const walk = mesh(
+        rbox(18, 0.14, 3.6, 0.06, 2),
+        walkMat,
+        0,
+        0.07,
+        3.35,
+      );
+      walk.castShadow = false;
+
+      // ------------------------------------------------------------ textures de l'agence
+      const NAVY = "#0b1130";
+      function signTex(name) {
+        return canvasTex(1024, 140, (g, w, h) => {
+          g.clearRect(0, 0, w, h);
+          g.textBaseline = "middle";
+          g.fillStyle = "#ffffff";
+          g.font = '800 92px "Bricolage"';
+          const a = name;
+          g.font = '800 92px "Bricolage"';
+          const wa = g.measureText(a).width;
+          g.font = '600 40px "DM Sans"';
+          const b = "IMMOBILIER";
+          g.letterSpacing = "6px";
+          const wb = g.measureText(b).width + 6 * b.length;
+          const x0 = (w - wa - 28 - wb) / 2;
+          g.font = '800 92px "Bricolage"';
+          g.letterSpacing = "0px";
+          g.fillText(a, x0, h / 2 + 4);
+          g.font = '600 40px "DM Sans"';
+          g.letterSpacing = "6px";
+          g.fillStyle = "#8f98c6";
+          g.fillText(b, x0 + wa + 28, h / 2 + 8);
+        });
+      }
+      function posterTex(kind) {
+        return canvasTex(400, 540, (g, w, h) => {
+          g.fillStyle = "#ffffff";
+          roundRect(g, 0, 0, w, h, 30);
+          g.fill();
+          // vignette du bien
+          g.save();
+          roundRect(g, 22, 22, w - 44, 250, 20);
+          g.clip();
+          const sky = g.createLinearGradient(0, 22, 0, 272);
+          sky.addColorStop(0, kind === 1 ? "#dfe6fb" : "#e9e3f6");
+          sky.addColorStop(1, "#f7f8fc");
+          g.fillStyle = sky;
+          g.fillRect(22, 22, w - 44, 250);
+          g.fillStyle = "#c9cfe4";
+          g.fillRect(22, 222, w - 44, 50);
+          // immeuble
+          g.fillStyle = "#ffffff";
+          g.fillRect(95, 70, 210, 160);
+          g.fillStyle = NAVY;
+          g.fillRect(95, 70, 210, 16);
+          g.fillStyle = "#b7c1da";
+          for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) g.fillRect(112 + c * 48, 100 + r * 42, 34, 28);
+          if (kind === 1) {
+            g.fillStyle = NAVY;
+            g.fillRect(150, 196, 100, 8);
+          }
+          g.restore();
+          g.fillStyle = NAVY;
+          g.font = '700 46px "DM Sans"';
+          g.fillText(kind === 1 ? "T3 · Lyon 6e" : "T2 · Lyon 3e", 30, 335);
+          g.font = '800 58px "Bricolage"';
+          g.fillText(kind === 1 ? "342 000 €" : "298 000 €", 30, 405);
+          g.fillStyle = "#5d6480";
+          g.font = '500 34px "DM Sans"';
+          g.fillText(kind === 1 ? "avec balcon" : "lumineux", 30, 462);
+        });
+      }
+      const closedTex = () =>
+        canvasTex(256, 110, (g, w, h) => {
+          g.fillStyle = NAVY;
+          roundRect(g, 0, 0, w, h, 22);
+          g.fill();
+          g.fillStyle = "#fff";
+          g.font = '700 54px "DM Sans"';
+          g.textAlign = "center";
+          g.textBaseline = "middle";
+          g.fillText("Fermé", w / 2, h / 2 + 2);
+        });
+      function calTex(band) {
+        return canvasTex(256, 192, (g, w, h) => {
+          g.fillStyle = "#ffffff";
+          g.fillRect(0, 0, w, h);
+          g.fillStyle = band;
+          g.fillRect(0, 0, w, 44);
+          g.fillStyle = "#dfe2ec";
+          for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) g.fillRect(18 + c * 46, 62 + r * 40, 34, 28);
+        });
+      }
+
+      // ------------------------------------------------------------ personnages
+      const SKIN = ["#f1c9a5", "#c98e62", "#8a5a3c", "#e8b48c", "#5a3a28", "#d9a27a"];
+      const HAIR = ["#2b2118", "#1b1b22", "#6b4a2e", "#3a2a20", "#c9a36a", "#14161f"];
+      const CLOTH = ["#3d4a8c", "#8f98c6", "#c98b6a", "#5d6475", "#d9c6a5", "#7a5c8a", "#2f6f8f", "#b5b9c9", "#9a5b4e", "#46506e"];
+      const geo = {
+        body: new THREE.CapsuleGeometry(0.27, 0.5, 6, 16),
+        head: new THREE.SphereGeometry(0.24, 28, 18),
+        hair: new THREE.SphereGeometry(0.255, 28, 14, 0, Math.PI * 2, 0, Math.PI * 0.52),
+        bun: new THREE.SphereGeometry(0.11, 16, 12),
+        arm: new THREE.CapsuleGeometry(0.075, 0.42, 4, 10),
+      };
+      function person(o) {
+        const g = new THREE.Group();
+        mesh(geo.body, clay(o.cloth), 0, 0.52, 0, g);
+        mesh(geo.head, clay(o.skin, 0.7), 0, 1.27, 0, g);
+        const hair = mesh(geo.hair, clay(o.hair, 0.9), 0, 1.3, -0.02, g);
+        hair.rotation.x = -0.32;
+        if (o.bun) mesh(geo.bun, clay(o.hair, 0.9), 0, 1.42, -0.2, g);
+        const a1 = mesh(geo.arm, clay(o.cloth), -0.31, 0.62, 0.02, g);
+        a1.rotation.z = 0.18;
+        const a2 = mesh(geo.arm, clay(o.cloth), 0.31, 0.62, 0.02, g);
+        a2.rotation.z = -0.18;
+        const sh = blob(1.0, 1.0, 0, 0.05, 0.45, g);
+        g.userData.shadow = sh;
+        g.position.set(o.x, 0.14, o.z);
+        g.rotation.y = o.ry || 0;
+        g.scale.setScalar(o.s || 1);
+        scene.add(g);
+        return g;
+      }
+      function setOpacity(group, op) {
+        group.traverse((m) => {
+          if (!m.material) return;
+          if (!m.userData.ownMat) {
+            m.material = m.material.clone();
+            m.userData.ownMat = true;
+          }
+          const base = m.userData.baseOpacity ?? m.material.opacity;
+          m.userData.baseOpacity = base;
+          m.material.transparent = op < 1 || m.material.map === shadowTex;
+          m.material.opacity = base * op;
+          m.castShadow = op > 0.6 && m.material.map !== shadowTex;
+        });
+      }
+
+      // ------------------------------------------------------------ une agence
+      function agency(x0, name, band) {
+        const g = new THREE.Group();
+        g.position.set(x0, 0, 0);
+        scene.add(g);
+        mesh(rbox(4.6, 0.2, 3.4, 0.06, 2), clay("#dcdfe8"), 0, 0.1, 0, g);
+        mesh(rbox(4.4, 3.3, 3.2, 0.12), clay("#eceef4"), 0, 1.75, 0, g);
+        mesh(rbox(4.62, 0.26, 3.42, 0.08), clay("#e1e4ed"), 0, 3.45, 0, g);
+        mesh(rbox(0.95, 0.5, 0.7, 0.08), clay("#d3d7e2"), 1.1, 3.82, -0.5, g);
+        mesh(rbox(0.5, 0.36, 0.5, 0.06), clay("#d9dce6"), -1.3, 3.75, -0.7, g);
+        // enseigne
+        mesh(rbox(4.5, 0.66, 0.4, 0.1), clay(NAVY, 0.6), 0, 2.86, 1.66, g);
+        const sign = new THREE.Mesh(new THREE.PlaneGeometry(4.3, 0.59), new THREE.MeshBasicMaterial({ map: signTex(name), transparent: true }));
+        sign.position.set(0, 2.86, 1.87);
+        g.add(sign);
+        // store à rayures
+        for (let i = 0; i < 7; i++) {
+          const s = mesh(new THREE.BoxGeometry(0.64, 0.05, 0.86), clay(i % 2 ? "#ffffff" : NAVY, 0.7), -1.92 + i * 0.64, 2.36, 2.02, g);
+          s.rotation.x = 0.42;
+        }
+        // vitrine
+        mesh(rbox(2.72, 1.86, 0.1, 0.05, 2), clay("#f8f9fc"), -0.72, 1.22, 1.6, g);
+        const glassMat = new THREE.MeshStandardMaterial({ color: "#b9c3dc", roughness: 0.18, metalness: 0.05, emissive: new THREE.Color(0), emissiveIntensity: 1 });
+        const glass = mesh(rbox(2.5, 1.66, 0.06, 0.03, 2), glassMat, -0.72, 1.22, 1.64, g);
+        glass.castShadow = false;
+        // annonces dans la vitrine
+        const posters = [1, 2].map((k, i) => {
+          const p = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 1.16), new THREE.MeshBasicMaterial({ map: posterTex(k), transparent: true }));
+          p.position.set(-1.27 + i * 1.1, 1.2, 1.69);
+          g.add(p);
+          return p;
+        });
+        // porte
+        mesh(rbox(1.12, 2.12, 0.1, 0.05, 2), clay("#f8f9fc"), 1.38, 1.18, 1.6, g);
+        const door = mesh(rbox(0.96, 1.96, 0.06, 0.03, 2), glassMat, 1.38, 1.16, 1.64, g);
+        door.castShadow = false;
+        mesh(new THREE.SphereGeometry(0.05, 12, 8), clay("#8f98c6", 0.4), 1.06, 1.16, 1.7, g);
+        const closed = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.27), new THREE.MeshBasicMaterial({ map: closedTex(), transparent: true }));
+        closed.position.set(1.38, 1.62, 1.7);
+        g.add(closed);
+        // plantes
+        [-2.32, 2.32].forEach((px) => {
+          mesh(new THREE.CylinderGeometry(0.26, 0.21, 0.42, 20), clay("#e6e8ef"), px, 0.41, 1.95, g);
+          mesh(new THREE.SphereGeometry(0.34, 20, 14), clay("#9fbfa9", 0.9), px, 0.86, 1.95, g);
+          mesh(new THREE.SphereGeometry(0.24, 18, 12), clay("#b4cfbb", 0.9), px + 0.12, 1.12, 1.9, g);
+        });
+        blob(6.2, 4.6, 0, 0.3, 0.55, g);
+        // lueur de la vitrine la nuit
+        const glow = new THREE.Mesh(
+          new THREE.PlaneGeometry(4.4, 3.2),
+          new THREE.MeshBasicMaterial({ map: radialTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
+        );
+        glow.position.set(-0.4, 1.25, 1.95);
+        g.add(glow);
+        // agenda de visites (pile de fiches)
+        const cards = [];
+        const ctex = calTex(band);
+        const side = clay("#f4f5f9");
+        const cardMats = [side, side, new THREE.MeshStandardMaterial({ map: ctex, roughness: 0.8 }), side, side, side];
+        for (let i = 0; i < 12; i++) {
+          const c = new THREE.Mesh(rbox(1.3, 0.16, 0.98, 0.04, 2), cardMats);
+          c.castShadow = true;
+          c.receiveShadow = true;
+          g.add(c);
+          cards.push(c);
+        }
+        return { g, glass, glassMat, glow, posters, closed, cards };
+      }
+
+      const YX = -2.75;
+      const TX = 2.75;
+      let Y, Th;
+      const people = {};
+
+      // ------------------------------------------------------------ caméra
+      // Chaque plan : cible, distance, lacet, tangage (degrés), focale verticale.
+      const WIDE = { c: [0, 1.7, 0.8], d: 36.5, yaw: 0, pitch: 14, fov: 30 };
+      const shots = [
+        { t: 0, a: { c: [YX, 1.75, 0.8], d: 21, yaw: -9, pitch: 12, fov: 30 }, b: { c: [YX, 1.75, 0.8], d: 19.8, yaw: -7, pitch: 12, fov: 30 }, t1: 1.1 },
+        { t: 1.1, move: 1.25, a: null, b: WIDE },
+        { t: 2.35, a: WIDE, b: { c: [0, 2.3, 0.8], d: 35.5, yaw: -2.5, pitch: 14, fov: 30 }, t1: T.ch1 },
+        { t: T.ch1, a: { c: [0, 2.9, 0.8], d: 40, yaw: 3, pitch: 11, fov: 30 }, b: { c: [0, 2.9, 0.8], d: 38.5, yaw: 1, pitch: 11, fov: 30 }, t1: T.stat },
+        { t: T.stat, a: { c: [0, 2.9, 0.8], d: 38.5, yaw: 1, pitch: 11, fov: 30 }, b: { c: [0, 2.6, 0.8], d: 37, yaw: -1, pitch: 12, fov: 30 }, t1: T.ch2 },
+        { t: T.ch2, a: { c: [TX + 0.2, 2.4, 1.8], d: 20.5, yaw: 12, pitch: 13, fov: 30 }, b: { c: [TX + 0.2, 2.4, 1.8], d: 19.2, yaw: 9, pitch: 13, fov: 30 }, t1: T.yasmineCam },
+        { t: T.yasmineCam, move: 0.7, a: null, b: { c: [YX - 0.2, 3.5, 1.8], d: 19.5, yaw: -9, pitch: 13, fov: 30 } },
+        { t: T.yasmineCam + 0.7, a: { c: [YX - 0.2, 3.5, 1.8], d: 19.5, yaw: -9, pitch: 13, fov: 30 }, b: { c: [YX - 0.2, 3.5, 1.8], d: 18.6, yaw: -11, pitch: 13, fov: 30 }, t1: T.ch3 },
+        { t: T.ch3, a: { c: [YX + 0.6, 3.5, 1.9], d: 25, yaw: -6, pitch: 13, fov: 30 }, b: { c: [YX + 0.6, 3.5, 1.9], d: 23.5, yaw: -3, pitch: 14, fov: 30 }, t1: T.same },
+        { t: T.same, a: WIDE, b: { c: [0, 1.9, 0.8], d: 35, yaw: 2, pitch: 14, fov: 30 }, t1: T.fin },
+        { t: T.fin, move: 1.6, a: null, b: { c: [YX + 0.2, 3.2, 0.8], d: 20, yaw: -6, pitch: 14, fov: 30 } },
+        { t: T.fin + 1.6, a: { c: [YX + 0.2, 3.2, 0.8], d: 20, yaw: -6, pitch: 14, fov: 30 }, b: { c: [YX + 0.2, 3.2, 0.8], d: 19, yaw: -8, pitch: 14, fov: 30 }, t1: D },
+      ];
+      function lerpShot(p, q, k) {
+        return {
+          c: p.c.map((v, i) => lerp(v, q.c[i], k)),
+          d: lerp(p.d, q.d, k),
+          yaw: lerp(p.yaw, q.yaw, k),
+          pitch: lerp(p.pitch, q.pitch, k),
+          fov: lerp(p.fov, q.fov, k),
+        };
+      }
+      // Résout le plan à t ; un plan « move » part de l'état exact où finit le précédent.
+      function shotAt(t) {
+        let state = shots[0].a;
+        for (let i = 0; i < shots.length; i++) {
+          const s = shots[i];
+          if (t < s.t) break;
+          const from = s.a || endOf(i - 1);
+          // un déplacement s'accélère puis se pose ; une tenue dérive lentement, à vitesse douce
+          if (s.move) state = lerpShot(from, s.b, inOut(seg(t, s.t, s.t + s.move)));
+          else state = lerpShot(from, s.b, Math.sin((seg(t, s.t, s.t1) * Math.PI) / 2));
+        }
+        return state;
+      }
+      const endOf = (i) => shots[i].b;
+      function placeCamera(t) {
+        const s = shotAt(t);
+        const yaw = (s.yaw * Math.PI) / 180;
+        const pitch = (s.pitch * Math.PI) / 180;
+        cam.fov = s.fov;
+        cam.position.set(s.c[0] + Math.sin(yaw) * Math.cos(pitch) * s.d, s.c[1] + Math.sin(pitch) * s.d, s.c[2] + Math.cos(yaw) * Math.cos(pitch) * s.d);
+        cam.lookAt(s.c[0], s.c[1], s.c[2]);
+        cam.updateProjectionMatrix();
+        cam.updateMatrixWorld();
+      }
+
+      // ------------------------------------------------------------ étiquettes
+      const v3 = new THREE.Vector3();
+      function anchor(id, x, y, z, op, sc = 1, ax = -50, ay = -100) {
+        const el = document.getElementById(id);
+        if (op <= 0.001) {
+          el.style.opacity = "0";
+          return;
+        }
+        v3.set(x, y, z).project(cam);
+        const px = (v3.x * 0.5 + 0.5) * W;
+        const py = (-v3.y * 0.5 + 0.5) * H;
+        el.style.opacity = String(clamp(op));
+        el.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) translate(${ax}%, ${ay}%) scale(${sc.toFixed(4)})`;
+        el.style.transformOrigin = `${-ax}% ${-ay}%`;
+      }
+
+      // ------------------------------------------------------------ la scène à l'instant t
+      const cDay = new THREE.Color("#fff6ea");
+      const cMoon = new THREE.Color("#9fb0ff");
+      const cMorning = new THREE.Color("#ffd2a8");
+      const hSkyDay = new THREE.Color("#ffffff");
+      const hSkyNight = new THREE.Color("#3a4790");
+      const hSkyMorning = new THREE.Color("#fff0e4");
+      const hGrDay = new THREE.Color("#c9cbe0");
+      const hGrNight = new THREE.Color("#0b1130");
+      const LAMP = new THREE.Color("#ffb347");
+      const SIGNAL = new THREE.Color("#5ce6a5");
+      const tmp = new THREE.Color();
+      const GROUND_DAY = new THREE.Color("#eceef5");
+      const GROUND_NIGHT = new THREE.Color("#46508a");
+      const WHITE = new THREE.Color("#ffffff");
+      const WALK_NIGHT = new THREE.Color("#7c86b8");
+      const skyNight = document.getElementById("w-sky-night");
+      const skyMorning = document.getElementById("w-sky-morning");
+
+      function windowLight(a, t, isY) {
+        // ambre dès que la demande arrive ; vert chez Yasmine dès qu'elle a répondu
+        const on = seg(t, T.msg + 0.15, T.msg + 0.45) * night(t);
+        const green = isY ? seg(t, T.reply, T.reply + 0.3) : 0;
+        tmp.copy(LAMP).lerp(SIGNAL, green);
+        a.glassMat.emissive.copy(tmp).multiplyScalar(0.85 * on);
+        a.glow.material.color.copy(tmp);
+        a.glow.material.opacity = 0.75 * on;
+      }
+
+      function render(t) {
+        const n = night(t);
+        const m = morning(t);
+        skyNight.style.opacity = n.toFixed(3);
+        skyMorning.style.opacity = m.toFixed(3);
+        scene.fog.color.copy(DAY_FOG).lerp(MORNING_FOG, m).lerp(NIGHT_FOG, n);
+        hemi.color.copy(hSkyDay).lerp(hSkyMorning, m).lerp(hSkyNight, n);
+        hemi.groundColor.copy(hGrDay).lerp(hGrNight, n);
+        hemi.intensity = lerp(0.95, 0.42, n);
+        groundMat.color.copy(GROUND_DAY).lerp(GROUND_NIGHT, n);
+        walkMat.color.copy(WHITE).lerp(WALK_NIGHT, n);
+        sun.color.copy(cDay).lerp(cMorning, m).lerp(cMoon, n);
+        sun.intensity = lerp(lerp(1.25, 1.35, m), 0.34, n);
+        sun.position.set(lerp(-6, -10, m), lerp(14, 9, m), 9);
+
+        placeCamera(t);
+
+        // Thomas surgit, l'agence de Yasmine est là dès la première image
+        const tp = spring(t - T.thomasPop, 0.55, 13);
+        Th.g.scale.set(Math.max(0.001, tp), Math.max(0.001, tp), Math.max(0.001, tp));
+        people.thomas.scale.setScalar(Math.max(0.001, spring(t - T.thomasPop - 0.25, 0.5, 15)));
+
+        // annonces identiques dans les deux vitrines
+        [Y, Th].forEach((a, j) => {
+          a.posters.forEach((p, i) => {
+            const s = j === 0 && t < T.cards ? 1 : spring(t - T.cards - i * 0.12 - j * 0.06, 0.5, 15);
+            p.scale.setScalar(Math.max(0.001, s));
+          });
+          a.closed.visible = n > 0.5;
+          a.closed.scale.setScalar(Math.max(0.001, spring(t - T.nightFull, 0.5, 15)));
+          windowLight(a, t, j === 0);
+        });
+
+        // agendas : douze visites chez Yasmine, deux chez Thomas
+        const stackOut = 1 - inCubic(seg(t, T.ch1, T.ch1 + 0.3));
+        [
+          [Y, 12],
+          [Th, 2],
+        ].forEach(([a, count]) => {
+          a.cards.forEach((c, i) => {
+            const t0 = T.stacks + i * 0.11;
+            const drop = clamp(spring(t - t0, 0.62, 16), 0, 1.2);
+            const vis = i < count && t >= t0 ? 1 : 0;
+            c.visible = vis > 0 && stackOut > 0.01;
+            c.position.set(-0.2 + ((i * 37) % 7) * 0.012, 3.72 + i * 0.17 + (1 - drop) * 2.2, 0.2 + ((i * 53) % 5) * 0.012);
+            c.rotation.y = (((i * 29) % 9) - 4) * 0.012;
+            c.scale.setScalar(Math.max(0.001, stackOut));
+          });
+        });
+        anchor("w-stackY", YX - 0.2, 3.72 + 12 * 0.17 + 0.25, 0.2, fade(t, T.stacks + 1.45, T.ch1 - 0.1) , pop(t, T.stacks + 1.4));
+        anchor("w-stackT", TX - 0.2, 3.72 + 2 * 0.17 + 0.25, 0.2, fade(t, T.stacks + 0.45, T.ch1 - 0.1), pop(t, T.stacks + 0.4));
+        anchor("w-eq", 0, 1.5, 1.9, fade(t, T.equals, T.pourquoi ?? T.ch1 - 0.2), pop(t, T.equals), -50, -50);
+
+        // 23:47 — la même demande, deux agences fermées
+        const msgOp = fade(t, T.msg, T.stat - 0.1, 0.15);
+        anchor("w-msgY", YX + 0.55, 6.3, 1.4, msgOp, pop(t, T.msg, T.stat - 0.1));
+        anchor("w-msgT", TX - 0.55, 6.3, 1.4, msgOp, pop(t, T.msg + 0.12, T.stat - 0.1));
+        document.getElementById("w-stateY-wait").style.display = t < T.reply ? "" : "none";
+        document.getElementById("w-stateY-done").style.display = t < T.reply ? "none" : "";
+        anchor("w-replyY", YX + 0.55, 3.95, 1.4, fade(t, T.reply, T.stat - 0.1, 0.15), pop(t, T.reply, T.stat - 0.1));
+        anchor("w-tagT", TX - 0.55, 4.55, 1.4, fade(t, T.nextDay, T.stat - 0.1, 0.15), pop(t, T.nextDay, T.stat - 0.1));
+
+        // 2. Les silences
+        const pIn = (k) => pop(t, T.people + k * 0.09, 1e9, 0.55);
+        Object.values(people).forEach((p) => {
+          if (!p.userData.slot) return;
+          const sl = p.userData.slot;
+          let s = sl.from === "people" ? pIn(sl.k) : sl.from === "crowd" ? pop(t, T.crowd + sl.k * 0.08, 1e9, 0.55) : 0;
+          if (t < T.ch2) s = 0;
+          p.scale.setScalar(Math.max(0.001, s * (sl.s || 1)));
+          p.visible = s > 0.002;
+        });
+        // le prospect silencieux de Thomas s'efface
+        const g = people.ghostT;
+        const gf = 1 - inOut(seg(t, T.ghostFade, T.ghostFade + 0.65));
+        setOpacity(g, gf);
+        g.position.y = 0.14 - (1 - gf) * 0.25;
+        if (gf < 0.02) g.visible = false;
+        anchor("w-ghostTag", TX + 1.3, 1.95, 3.0, fade(t, T.ghost, T.ghostFade + 0.15, 0.15) * (t > T.ch2 ? 1 : 0), pop(t, T.ghost, T.ghostFade + 0.15));
+        // le même prospect chez Yasmine : relancé
+        anchor("w-silentTag", YX - 1.3, 1.95, 3.0, fade(t, T.silent, T.sent - 0.05, 0.15), pop(t, T.silent, T.sent - 0.05));
+        anchor("w-sentTag", YX - 1.3, 1.95, 3.0, fade(t, T.sent, T.ch3 - 0.05, 0.12), pop(t, T.sent, T.ch3 - 0.05));
+        const fk = outCubic(seg(t, T.tap + 0.15, T.sent));
+        const fx = lerp(YX + 1.38, YX - 1.3, fk);
+        const fy = lerp(2.4, 1.9, fk) + Math.sin(fk * Math.PI) * 1.4;
+        const fz = lerp(1.9, 3.0, fk);
+        anchor("w-fly", fx, fy, fz, fade(t, T.tap + 0.15, T.sent - 0.05, 0.08), 1, -50, -50);
+
+        // 3. Qui appeler : les prospects chauds sortent du lot
+        spots.forEach((sp, i) => {
+          const s = pop(t, T.hot + i * 0.18, T.same - 0.05, 0.7);
+          sp.cone.scale.set(Math.max(0.001, s), 1, Math.max(0.001, s));
+          sp.cone.material.opacity = 0.34 * clamp(s);
+          sp.disc.material.opacity = 0.55 * clamp(s);
+          sp.cone.visible = sp.disc.visible = s > 0.003;
+        });
+        anchor("w-hot1", hotA.position.x, 2.05, hotA.position.z, fade(t, T.hot + 0.1, T.same - 0.05, 0.12), pop(t, T.hot + 0.1, T.same - 0.05));
+        anchor("w-hot2", hotB.position.x, 2.05, hotB.position.z, fade(t, T.hot + 0.28, T.same - 0.05, 0.12), pop(t, T.hot + 0.28, T.same - 0.05));
+        anchor("w-match", YX - 0.72, 2.25, 1.9, fade(t, T.match, T.same - 0.05, 0.12), pop(t, T.match, T.same - 0.05));
+
+        renderer.render(scene, cam);
+      }
+
+      let spots = [];
+      let hotA, hotB;
+
+      function build() {
+        Y = agency(YX, "Yasmine", "#5ce6a5");
+        Th = agency(TX, "Thomas", "#b8bccb");
+        people.yasmine = person({ x: YX + 1.38, z: 2.25, skin: "#c98e62", hair: "#1b1b22", cloth: "#3d4a8c", bun: true, ry: -0.15 });
+        people.thomas = person({ x: TX + 1.38, z: 2.25, skin: "#f1c9a5", hair: "#6b4a2e", cloth: "#c98b6a", ry: -0.15 });
+        // prospects : trois devant chaque agence (chapitre 2), puis la foule (chapitre 3)
+        const slots = [
+          // [côté, x relatif, z, groupe, ordre]
+          ["Y", -1.3, 3.0, "people", 0, "silentY"],
+          ["Y", 0.1, 3.5, "people", 1],
+          ["Y", 1.0, 3.05, "people", 2],
+          ["T", -1.0, 3.1, "people", 0],
+          ["T", 0.2, 3.55, "people", 1],
+          ["T", 1.3, 3.0, "people", 2, "ghostT"],
+          ["Y", -2.0, 3.8, "crowd", 0, "hotB"],
+          ["Y", -0.6, 4.1, "crowd", 1],
+          ["Y", 1.9, 3.75, "crowd", 2, "hotA"],
+          ["Y", 0.8, 4.2, "crowd", 3],
+          ["T", -1.9, 3.85, "crowd", 0],
+          ["T", -0.4, 4.15, "crowd", 1],
+          ["T", 0.9, 4.15, "crowd", 2],
+          ["T", 2.0, 3.8, "crowd", 3],
+        ];
+        slots.forEach((s, i) => {
+          const x = (s[0] === "Y" ? YX : TX) + s[1];
+          const p = person({
+            x,
+            z: s[2],
+            skin: SKIN[(i * 5 + 1) % SKIN.length],
+            hair: HAIR[(i * 3 + 2) % HAIR.length],
+            cloth: CLOTH[(i * 7 + 3) % CLOTH.length],
+            bun: i % 3 === 1,
+            ry: Math.PI + (((i * 13) % 7) - 3) * 0.08,
+            s: 0.9 + ((i * 17) % 5) * 0.025,
+          });
+          p.userData.slot = { from: s[3], k: s[4], s: p.scale.x };
+          people[s[5] || "p" + i] = p;
+        });
+        hotA = people.hotA;
+        hotB = people.hotB;
+        // cônes de lumière ambrée sur les prospects chauds
+        const coneTex = canvasTex(8, 256, (g2, w, h) => {
+          const gr = g2.createLinearGradient(0, 0, 0, h);
+          gr.addColorStop(0, "rgba(255,255,255,0)");
+          gr.addColorStop(1, "rgba(255,255,255,1)");
+          g2.fillStyle = gr;
+          g2.fillRect(0, 0, w, h);
+        });
+        spots = [hotA, hotB].map((p) => {
+          const cone = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.08, 0.62, 4.6, 32, 1, true),
+            new THREE.MeshBasicMaterial({ color: "#ffb347", map: coneTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }),
+          );
+          cone.position.set(p.position.x, 2.3 + 0.14, p.position.z);
+          scene.add(cone);
+          const disc = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.7, 1.7),
+            new THREE.MeshBasicMaterial({ color: "#ffb347", map: radialTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }),
+          );
+          disc.rotation.x = -Math.PI / 2;
+          disc.position.set(p.position.x, 0.16, p.position.z);
+          scene.add(disc);
+          return { cone, disc };
+        });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      Promise.all([
+        document.fonts.load('800 92px "Bricolage"'),
+        document.fonts.load('600 40px "DM Sans"'),
+        document.fonts.load('700 46px "DM Sans"'),
+        document.fonts.load('500 34px "DM Sans"'),
+      ]).then(() => {
+        build();
+        tl.eventCallback("onUpdate", () => render(tl.time()));
+        tl.to({}, { duration: D }, 0);
+        render(0);
+        window.__timelines["world"] = tl;
+        if (typeof window.__hfForceTimelineRebind === "function") window.__hfForceTimelineRebind();
+      });
+    })();
+  </script>
+</template>

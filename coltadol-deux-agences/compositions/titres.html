@@ -1,0 +1,150 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .titre {
+      position: absolute;
+      left: 0;
+      top: 236px;
+      width: 1080px;
+      padding: 0 70px;
+      text-align: center;
+    }
+    .ligne {
+      font: 800 70px/1.16 "Bricolage", sans-serif;
+      letter-spacing: -0.015em;
+      color: var(--color-ink, #0b1130);
+    }
+    .ligne.nuit {
+      color: #eef0fa;
+    }
+    .w {
+      display: inline-block;
+      opacity: 0;
+    }
+    .pill {
+      padding: 0.02em 0.26em 0.06em;
+      margin: 0 0.02em;
+      border-radius: 0.42em;
+      color: #0b1130;
+      box-shadow: 0 8px 22px rgb(11 17 48 / 0.16);
+    }
+    .pill-a {
+      background: var(--color-lamp, #ffb347);
+    }
+    .pill-g {
+      background: var(--color-signal, #5ce6a5);
+    }
+    #titres-note {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 1252px;
+      text-align: center;
+    }
+    #titres-note span {
+      display: inline-block;
+      font: 600 24px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+      background: rgb(255 255 255 / 0.86);
+      padding: 11px 20px;
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgb(11 17 48 / 0.08);
+    }
+  </style>
+  <div id="root" data-composition-id="titres" data-width="1080" data-height="1920">
+    <div id="t01" class="clip titre" data-start="0" data-duration="1.12" data-track-index="0">
+      <div id="t01-l" class="ligne"><span id="t01-w0" class="w">Voici</span> <span id="t01-w1" class="w pill pill-g">Yasmine,</span></div>
+    </div>
+    <div id="t02" class="clip titre" data-start="1.15" data-duration="1.45" data-track-index="0">
+      <div id="t02-l" class="ligne"><span id="t02-w0" class="w">et</span> <span id="t02-w1" class="w">voici</span> <span id="t02-w2" class="w pill pill-a">Thomas.</span></div>
+    </div>
+    <div id="t03" class="clip titre" data-start="2.7" data-duration="2.35" data-track-index="0">
+      <div id="t03-l" class="ligne"><span id="t03-w0" class="w">Deux</span> <span id="t03-w1" class="w">agences.</span> <span id="t03-w2" class="w">Même</span> <span id="t03-w3" class="w">rue.</span> <span id="t03-w4" class="w">Mêmes</span> <span id="t03-w5" class="w">biens.</span></div>
+    </div>
+    <div id="t04" class="clip titre" data-start="5.1" data-duration="2.3" data-track-index="0">
+      <div id="t04-l" class="ligne"><span id="t04-w0" class="w">Pourquoi</span> <span id="t04-w1" class="w">l'agenda</span> <span id="t04-w2" class="w">de</span> <span id="t04-w3" class="w pill pill-g">Yasmine</span> <span id="t04-w4" class="w">est</span> <span id="t04-w5" class="w">plein</span> <span id="t04-w6" class="w">?</span></div>
+    </div>
+    <div id="t05" class="clip titre" data-start="8.55" data-duration="1.85" data-track-index="0">
+      <div id="t05-l" class="ligne nuit"><span id="t05-w0" class="w pill pill-a">23&nbsp;h&nbsp;47.</span> <span id="t05-w1" class="w">Un</span> <span id="t05-w2" class="w">acheteur</span> <span id="t05-w3" class="w">écrit.</span></div>
+    </div>
+    <div id="t06" class="clip titre" data-start="10.45" data-duration="1.4" data-track-index="0">
+      <div id="t06-l" class="ligne nuit"><span id="t06-w0" class="w pill pill-g">Yasmine</span> <span id="t06-w1" class="w">répond</span> <span id="t06-w2" class="w">tout</span> <span id="t06-w3" class="w">de</span> <span id="t06-w4" class="w">suite.</span></div>
+    </div>
+    <div id="t07" class="clip titre" data-start="11.9" data-duration="1.35" data-track-index="0">
+      <div id="t07-l" class="ligne nuit"><span id="t07-w0" class="w pill pill-a">Thomas&nbsp;?</span> <span id="t07-w1" class="w">Le</span> <span id="t07-w2" class="w">lendemain.</span></div>
+    </div>
+    <div id="t08" class="clip titre" data-start="13.3" data-duration="2.15" data-track-index="0">
+      <div id="t08-l" class="ligne"><span id="t08-w0" class="w">Répondre</span> <span id="t08-w1" class="w pill pill-g">dans&nbsp;l'heure</span> <span id="t08-w2" class="w">:</span></div>
+    </div>
+    <div id="t09" class="clip titre" data-start="16.5" data-duration="2.1" data-track-index="0">
+      <div id="t09-l" class="ligne"><span id="t09-w0" class="w pill pill-a">Thomas</span> <span id="t09-w1" class="w">oublie</span> <span id="t09-w2" class="w">ceux</span> <span id="t09-w3" class="w">qui</span> <span id="t09-w4" class="w">se</span> <span id="t09-w5" class="w">taisent.</span></div>
+    </div>
+    <div id="t10" class="clip titre" data-start="18.65" data-duration="1.5" data-track-index="0">
+      <div id="t10-l" class="ligne"><span id="t10-w0" class="w pill pill-g">Yasmine</span> <span id="t10-w1" class="w">reçoit</span> <span id="t10-w2" class="w">une</span> <span id="t10-w3" class="w">relance</span> <span id="t10-w4" class="w">prête.</span></div>
+    </div>
+    <div id="t11" class="clip titre" data-start="20.2" data-duration="1.15" data-track-index="0">
+      <div id="t11-l" class="ligne"><span id="t11-w0" class="w">Elle</span> <span id="t11-w1" class="w pill pill-g">l'envoie.</span></div>
+    </div>
+    <div id="t12" class="clip titre" data-start="22.4" data-duration="2.55" data-track-index="0">
+      <div id="t12-l" class="ligne"><span id="t12-w0" class="w">À</span> <span id="t12-w1" class="w pill pill-g">8&nbsp;h</span> <span id="t12-w2" class="w">:</span> <span id="t12-w3" class="w">qui</span> <span id="t12-w4" class="w">appeler,</span> <span id="t12-w5" class="w">quoi</span> <span id="t12-w6" class="w">proposer.</span></div>
+    </div>
+    <div id="t13" class="clip titre" data-start="25" data-duration="1.35" data-track-index="0">
+      <div id="t13-l" class="ligne"><span id="t13-w0" class="w">Même</span> <span id="t13-w1" class="w">rue.</span> <span id="t13-w2" class="w">Mêmes</span> <span id="t13-w3" class="w">biens.</span></div>
+    </div>
+    <div id="t14" class="clip titre" data-start="26.4" data-duration="2.15" data-track-index="0">
+      <div id="t14-l" class="ligne"><span id="t14-w0" class="w">La</span> <span id="t14-w1" class="w">différence</span> <span id="t14-w2" class="w">?</span> <span id="t14-w3" class="w">Un</span> <span id="t14-w4" class="w pill pill-g">responsable&nbsp;commercial&nbsp;IA.</span></div>
+    </div>
+    <div id="t15" class="clip titre" data-start="28.6" data-duration="3.4" data-track-index="0">
+      <div id="t15-l" class="ligne"><span id="t15-w0" class="w">Commente</span> <span id="t15-w1" class="w pill pill-g">«&nbsp;AGENCE&nbsp;»</span> <span id="t15-w2" class="w">et</span> <span id="t15-w3" class="w">je</span> <span id="t15-w4" class="w">t'envoie</span> <span id="t15-w5" class="w">le</span> <span id="t15-w6" class="w">lien.</span></div>
+    </div>
+    <div id="titres-note" class="clip" data-start="2.9" data-duration="4.5" data-track-index="1" data-layout-allow-caption-zone>
+      <span id="titres-note-s">Illustration : Yasmine, Thomas et leurs agences sont fictifs.</span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const GROUPS = [{"id":"t01","a":0,"b":1.12,"n":2,"nuit":false},{"id":"t02","a":1.15,"b":2.6,"n":3,"nuit":false},{"id":"t03","a":2.7,"b":5.05,"n":6,"nuit":false},{"id":"t04","a":5.1,"b":7.4,"n":7,"nuit":false},{"id":"t05","a":8.55,"b":10.4,"n":4,"nuit":true},{"id":"t06","a":10.45,"b":11.85,"n":5,"nuit":true},{"id":"t07","a":11.9,"b":13.25,"n":3,"nuit":true},{"id":"t08","a":13.3,"b":15.45,"n":3,"nuit":false},{"id":"t09","a":16.5,"b":18.6,"n":6,"nuit":false},{"id":"t10","a":18.65,"b":20.15,"n":5,"nuit":false},{"id":"t11","a":20.2,"b":21.35,"n":2,"nuit":false},{"id":"t12","a":22.4,"b":24.95,"n":7,"nuit":false},{"id":"t13","a":25,"b":26.35,"n":4,"nuit":false},{"id":"t14","a":26.4,"b":28.55,"n":5,"nuit":false},{"id":"t15","a":28.6,"b":32,"n":7,"nuit":false}];
+      const GREY = "#9ea3bd";
+      const INK = "#0b1130";
+      GROUPS.forEach((g, gi) => {
+        for (let j = 0; j < g.n; j++) {
+          const el = "#" + g.id + "-w" + j;
+          // la toute première image montre déjà le premier mot (vignette du reel)
+          const at = g.a === 0 ? -0.2 : g.a + 0.04 + j * 0.085;
+          const isPill = document.querySelector(el).classList.contains("pill");
+          if (at < 0) {
+            tl.set(el, { opacity: 1, filter: "blur(0px)", color: INK }, 0);
+          } else if (isPill) {
+            tl.fromTo(el, { opacity: 0, scale: 0.55, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.38, ease: "back.out(2.2)" }, at);
+          } else {
+            tl.fromTo(el, { opacity: 0, filter: "blur(7px)", color: GREY }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out" }, at);
+            tl.to(el, { color: g.nuit ? "#eef0fa" : INK, duration: 0.14, ease: "none" }, Math.max(0, at + 0.15));
+          }
+        }
+        // sortie : la ligne se floute et s'efface (sauf la dernière, qui tient jusqu'au bout)
+        if (gi < GROUPS.length - 1) {
+          tl.fromTo("#" + g.id + "-l", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in" }, g.b - 0.16);
+        }
+      });
+      tl.fromTo("#titres-note-s", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 2.95);
+      tl.to("#titres-note-s", { opacity: 0, duration: 0.15, ease: "power2.in" }, 7.25);
+      window.__timelines["titres"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,224 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      color: #0b1130;
+      font-family: "DM Sans", sans-serif;
+    }
+    .veil {
+      position: absolute;
+      inset: 0;
+      background: rgb(243 244 250 / 0.86);
+      opacity: 0;
+    }
+    .chap {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 330px;
+      text-align: center;
+    }
+    .num {
+      display: inline-block;
+      font: 800 640px/0.9 "Bricolage", sans-serif;
+      letter-spacing: -0.04em;
+      opacity: 0;
+    }
+    .num span {
+      background: linear-gradient(180deg, #ffb347 8%, #5ce6a5 92%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 18px 30px rgb(11 17 48 / 0.18));
+    }
+    .chip {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 1000px;
+      text-align: center;
+    }
+    .chip span {
+      display: inline-block;
+      font: 800 66px/1 "Bricolage", sans-serif;
+      background: #5ce6a5;
+      padding: 14px 34px 18px;
+      border-radius: 28px;
+      box-shadow: 0 14px 34px rgb(11 17 48 / 0.18);
+      opacity: 0;
+    }
+    /* La carte Relances IA, reprise de la console (textes de lib/landing-i18n/fr.ts) */
+    #s-card {
+      position: absolute;
+      left: 80px;
+      top: 448px;
+      width: 920px;
+    }
+    #s-card-in {
+      background: #fff;
+      border-radius: 36px;
+      padding: 34px 38px 30px;
+      box-shadow: 0 30px 70px rgb(11 17 48 / 0.22), 0 4px 10px rgb(11 17 48 / 0.08);
+      opacity: 0;
+    }
+    .s-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font: 700 28px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .s-head b {
+      font: 800 40px/1 "Bricolage", sans-serif;
+      color: #0b1130;
+    }
+    .s-row {
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .s-av {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #e8eaf4;
+      display: grid;
+      place-items: center;
+      font: 800 30px/1 "Bricolage", sans-serif;
+    }
+    .s-name {
+      font: 700 36px/1.1 "DM Sans", sans-serif;
+    }
+    .s-tags {
+      margin-top: 8px;
+      display: flex;
+      gap: 10px;
+    }
+    .s-tag {
+      font: 700 27px/1 "DM Sans", sans-serif;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eef0f6;
+      color: #3a4166;
+    }
+    .s-tag.lamp {
+      background: rgb(255 179 71 / 0.3);
+      color: #0b1130;
+    }
+    .s-label {
+      margin-top: 26px;
+      font: 700 26px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    .s-msg {
+      margin-top: 12px;
+      background: #f4f5fa;
+      border-radius: 24px;
+      padding: 22px 26px;
+      font: 500 32px/1.3 "DM Sans", sans-serif;
+    }
+    .s-btn {
+      position: relative;
+      margin-top: 24px;
+      height: 86px;
+      border-radius: 24px;
+      background: #0b1130;
+      color: #fff;
+      font: 700 31px/86px "DM Sans", sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+    .s-btn-ok {
+      position: absolute;
+      inset: 0;
+      background: #5ce6a5;
+      color: #0b1130;
+      opacity: 0;
+    }
+    .s-foot {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      font: 600 24px/1 "DM Sans", sans-serif;
+      color: #5d6480;
+    }
+    #s-finger {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: rgb(255 255 255 / 0.55);
+      border: 4px solid rgb(11 17 48 / 0.55);
+      box-shadow: 0 10px 30px rgb(11 17 48 / 0.25);
+      opacity: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="silences" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="s-veil" class="veil"></div>
+    <div id="s-chap" class="clip chap" data-start="0" data-duration="1.15" data-track-index="0">
+      <div id="s-num" class="num"><span>2</span></div>
+    </div>
+    <div id="s-chip" class="clip chip" data-start="0" data-duration="1.15" data-track-index="1">
+      <span id="s-chip-s">Les silences</span>
+    </div>
+    <div id="s-card" class="clip" data-start="3.2" data-duration="2.7" data-track-index="0">
+      <div id="s-card-in">
+        <div class="s-head"><b>Relances IA</b><span>1 prospect demande votre attention</span></div>
+        <div class="s-row">
+          <div class="s-av">LD</div>
+          <div>
+            <div class="s-name">Léa D.</div>
+            <div class="s-tags"><span class="s-tag lamp">Tiède</span><span class="s-tag">Silencieux depuis 3 jours</span></div>
+          </div>
+        </div>
+        <div class="s-label">Message suggéré</div>
+        <div class="s-msg">Bonjour Léa, le T2 à Lyon 3e vous intéresse toujours ? Je peux vous proposer une visite samedi.</div>
+        <div id="s-btn" class="s-btn">
+          Envoyer depuis le WhatsApp connecté
+          <div id="s-btn-ok" class="s-btn-ok">✓ Relance envoyée</div>
+        </div>
+        <div class="s-foot"><span>Rien ne part sans vous.</span><span>Prospect et message d'exemple.</span></div>
+      </div>
+      <div id="s-finger"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // le voile du ×7 est déjà là : on l'hérite, puis on l'ouvre sur le jour
+      tl.fromTo("#s-veil", { opacity: 1 }, { opacity: 1, duration: 0.01 }, 0);
+      tl.fromTo("#s-num", { opacity: 0, scale: 0.55, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 0.04);
+      tl.fromTo("#s-chip-s", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.42, ease: "back.out(2.2)" }, 0.24);
+      tl.to("#s-num", { opacity: 0, scale: 1.28, filter: "blur(16px)", duration: 0.22, ease: "power3.in" }, 0.9);
+      tl.to("#s-chip-s", { opacity: 0, scale: 0.8, duration: 0.18, ease: "power3.in" }, 0.92);
+      tl.to("#s-veil", { opacity: 0, duration: 0.28, ease: "power2.inOut" }, 0.92);
+
+      // Relances IA : la carte arrive, le doigt envoie
+      tl.fromTo("#s-card-in", { opacity: 0, y: 70, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out" }, 3.25);
+      tl.fromTo("#s-finger", { opacity: 0, x: 760, y: 760, scale: 1.2 }, { opacity: 1, x: 640, y: 560, scale: 1, duration: 0.55, ease: "power3.out" }, 4.05);
+      tl.to("#s-finger", { scale: 0.78, duration: 0.09, ease: "power2.in" }, 4.66);
+      tl.to("#s-btn", { scale: 0.97, duration: 0.09, ease: "power2.in" }, 4.66);
+      tl.to("#s-finger", { scale: 1, duration: 0.2, ease: "power2.out" }, 4.75);
+      tl.to("#s-btn", { scale: 1, duration: 0.22, ease: "back.out(3)" }, 4.75);
+      tl.fromTo("#s-btn-ok", { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "none" }, 4.72);
+      tl.to("#s-finger", { opacity: 0, y: 640, duration: 0.25, ease: "power2.in" }, 5.0);
+      tl.to("#s-card-in", { opacity: 0, y: -40, filter: "blur(8px)", duration: 0.22, ease: "power3.in" }, 5.62);
+      window.__timelines["silences"] = tl;
+    })();
+  </script>
+</template>
