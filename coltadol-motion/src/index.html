@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Coltadol — publicité 9:16</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="city" width="1080" height="1920"></canvas>
+      <div id="veil"></div>
+
+      <div id="scrim"></div>
+      <div id="world">
+        <!-- ============================================================ HOOK -->
+        <section id="hook" class="scene">
+          <div id="clock1" class="abs odo display"></div>
+          <div id="bubble0" class="abs bubble0">
+            <p class="b0-from"><span>+33 6 •• •• 41 18</span><span>23:47</span></p>
+            <p class="b0-text">Bonjour, le T3 à Lyon 6e est toujours disponible&nbsp;?</p>
+            <p class="b0-state"><span class="dot lamp"></span><span id="b0-wait">en attente</span></p>
+          </div>
+          <p id="hook-line" class="abs centered line split-words" data-text="Votre agence est *fermée.*" data-hl="lamp"></p>
+        </section>
+
+        <!-- ========================================================= PROBLEM -->
+        <section id="problem" class="scene">
+          <div id="swarm" class="abs"></div>
+          <h2 id="p-l1" class="abs centered display split" data-text="Ils écrivent&#10;*à toute heure.*" data-hl="lamp"></h2>
+          <h2 id="p-l2" class="abs centered display split" data-text="Leurs besoins&#10;*s'éparpillent.*" data-hl="lamp"></h2>
+          <h2 id="p-l3" class="abs centered display split" data-text="Des prospects&#10;*s'oublient.*" data-hl="lamp"></h2>
+        </section>
+
+        <!-- ============================================================ TURN -->
+        <section id="turn" class="scene">
+          <div id="mark-big" class="abs"></div>
+          <h2 id="turn-title" class="abs centered display split" data-text="Coltadol répond.&#10;*À chaque demande.*"></h2>
+          <p id="turn-sub" class="abs centered sub split-words" data-text="Sur WhatsApp, jour et nuit, dans la langue du prospect."></p>
+        </section>
+
+        <div id="portal" class="abs"></div>
+
+        <!-- ========================================================= QUALIFY -->
+        <section id="qualify" class="scene">
+          <p id="q-kicker" class="abs kicker"><span class="dot"></span>Qualification automatique</p>
+          <h2 id="q-title" class="abs title split" data-text="Une conversation devient&#10;un prospect *qualifié.*"></h2>
+          <div id="qset" class="abs">
+            <div id="phone" class="abs pane phone">
+              <div class="ph-head">
+                <span class="avatar">AG</span>
+                <div class="ph-id">
+                  <p class="ph-title">Votre agence sur WhatsApp</p>
+                  <p class="ph-status">Coltadol répond</p>
+                </div>
+              </div>
+              <div id="thread" class="thread"></div>
+            </div>
+
+            <div id="card" class="abs pane card">
+              <div class="c-head">
+                <div>
+                  <p class="c-sub">Nouveau prospect WhatsApp</p>
+                  <p class="c-num title">+33 6 •• •• 41 18</p>
+                </div>
+                <span class="status"><span id="st-new">Nouveau</span><span id="st-ok">Qualifié</span></span>
+              </div>
+              <div class="c-body">
+                <dl id="fields" class="fields"></dl>
+                <div class="c-score">
+                  <div id="ring" class="ring">
+                    <svg viewBox="0 0 120 120">
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.14)" stroke-width="9" />
+                      <circle id="ring-arc" cx="60" cy="60" r="52" fill="none" stroke="#5ce6a5" stroke-width="9" stroke-linecap="round" transform="rotate(-90 60 60)" />
+                    </svg>
+                    <div class="num"><b id="ring-num" class="display">0</b><small>score</small></div>
+                  </div>
+                  <span id="hot" class="pill hot">Prospect chaud</span>
+                  <p class="rule">Chaud dès 70, ou si l'urgence est haute</p>
+                </div>
+              </div>
+              <div class="c-foot">
+                <div>
+                  <p class="c-label">Informations manquantes</p>
+                  <div id="missing" class="missing">
+                    <span class="miss" data-f="intent">achat ou location</span>
+                    <span class="miss" data-f="budget">budget</span>
+                    <span id="none-missing" class="hl">✓ Rien ne manque</span>
+                  </div>
+                </div>
+                <div class="c-mode">
+                  <p class="c-label">Réponse IA</p>
+                  <p id="mode-a" class="mode"><span class="dot"></span>Active</p>
+                  <p id="mode-b" class="mode lamp"><span class="dot lamp"></span>Passée à l'humain</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="qchips" class="abs"></div>
+        </section>
+        <div id="flyer" class="abs"></div>
+
+        <!-- ================================================ ORGANIZE · RECOVERY -->
+        <section id="desk" class="scene">
+          <p id="o-kicker" class="abs kicker"><span class="dot"></span>Prospects</p>
+          <h2 id="o-title" class="abs title split" data-text="Chaque prospect,&#10;*classé et suivi.*"></h2>
+          <p id="r-kicker" class="abs kicker"><span class="dot lamp"></span>Lead Recovery</p>
+          <h2 id="r-title" class="abs title split" data-text="Les silences deviennent&#10;des *relances.*"></h2>
+
+          <div id="console-wrap" class="abs">
+            <div id="console" class="pane console rim">
+              <div class="k-top">
+                <div id="k-logo" class="k-logo"></div>
+                <div class="k-search">Rechercher un prospect…</div>
+                <span class="avatar sm">YA</span>
+              </div>
+              <div class="k-body">
+                <nav class="k-nav">
+                  <p><i class="ic ic-grid"></i>Vue d'ensemble</p>
+                  <p class="on"><i class="ic ic-users"></i>Prospects</p>
+                  <p><i class="ic ic-bell"></i>Relances<b id="k-badge" class="badge">1</b></p>
+                  <p><i class="ic ic-home"></i>Biens</p>
+                  <p><i class="ic ic-team"></i>Équipe</p>
+                  <p><i class="ic ic-spark"></i>Assistant IA</p>
+                  <p class="k-wa"><span class="dot"></span>WhatsApp connecté</p>
+                </nav>
+                <div class="k-main">
+                  <p class="k-h title">Prospects</p>
+                  <p class="k-d">Classés par le score de l'IA.</p>
+                  <div class="k-tabs"><span class="on">Tous <b>6</b></span><span>Chauds <b>3</b></span><span>À relancer <b id="k-tab-r">1</b></span></div>
+                  <div id="rows" class="rows"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="relance" class="abs pane relance">
+            <p class="rl-head"><i class="ic ic-spark"></i><b>Relances IA</b><span>1 prospect demande votre attention</span></p>
+            <div class="rl-item">
+              <div class="rl-top">
+                <span class="avatar">KB</span><b class="rl-name">Karim B.</b><span class="pill prio high">Chaud</span><span class="rl-when">il y a 26 h</span>
+              </div>
+              <p class="rl-reason">Prospect chaud sans réponse de l'agence depuis 26 heures.</p>
+              <div class="rl-sugg">
+                <p class="rl-label"><i class="ic ic-spark"></i>Message suggéré</p>
+                <p id="rl-text" class="rl-text"></p>
+              </div>
+              <div id="rl-send" class="rl-send">
+                <span id="rl-send-a">Envoyer depuis le WhatsApp connecté</span>
+                <span id="rl-send-b">✓ Relance envoyée</span>
+              </div>
+            </div>
+          </div>
+          <p id="r-note" class="abs centered note" style="top: 1580px">Vous validez. Rien ne part sans vous.</p>
+          <div id="tap" class="abs tap"></div>
+        </section>
+
+        <!-- ========================================================= MORNING -->
+        <section id="morning" class="scene">
+          <div id="clock2" class="abs odo display"></div>
+          <p id="m-kicker" class="abs kicker"><span class="dot"></span>08:00 · Rapport directeur</p>
+          <h2 id="m-title" class="abs title split" data-text="Qui appeler.&#10;*Quoi proposer.*"></h2>
+          <div id="notif" class="abs notif">
+            <div id="notif-icon" class="n-icon"></div>
+            <div class="n-body">
+              <p class="n-head"><span>WhatsApp · Coltadol</span><span>08:00</span></p>
+              <p class="n-title">Rapport directeur</p>
+              <p class="n-text">3 prospects chauds à prioriser, 2 relances en retard, 5 biens à proposer.</p>
+            </div>
+          </div>
+          <div id="report" class="abs pane report">
+            <p class="rp-greet title">Bonjour. Voici ce qui demande votre attention.</p>
+            <div class="metrics">
+              <div class="metric"><b class="display" data-n="12">0</b><span>Nouveaux prospects</span></div>
+              <div class="metric"><b class="display lamp" data-n="3">0</b><span>Prospects chauds</span></div>
+              <div class="metric"><b class="display" data-n="2">0</b><span>Relances en retard</span></div>
+              <div class="metric"><b class="display hl" data-n="5">0</b><span>Biens à proposer</span></div>
+            </div>
+            <p class="rp-list">Prospects prioritaires</p>
+            <div id="prio" class="prio"></div>
+          </div>
+          <div id="match" class="abs pane match">
+            <div class="mring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.14)" stroke-width="10" />
+                <circle id="match-arc" cx="60" cy="60" r="52" fill="none" stroke="#5ce6a5" stroke-width="10" stroke-linecap="round" transform="rotate(-90 60 60)" />
+              </svg>
+              <b id="match-num" class="display">0</b>
+            </div>
+            <div class="m-copy">
+              <p class="m-sub">Meilleur match · +33 6 •• •• 41 18</p>
+              <p class="m-title">T3 avec balcon, Lyon 6e</p>
+              <p class="m-hl">Match à 100 % · 342 000 €</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================= END -->
+        <section id="end" class="scene">
+          <div id="lockup" class="abs"></div>
+          <h2 id="e-title" class="abs centered display split" data-text="Votre responsable&#10;commercial *IA.*"></h2>
+          <div id="pills" class="abs pills">
+            <span class="pill feat">Qualification WhatsApp</span>
+            <span class="pill feat">Relances</span>
+            <span class="pill feat">Biens</span>
+            <span class="pill feat">Équipe</span>
+          </div>
+          <div id="cta" class="abs cta">
+            <span>Essai gratuit 14&nbsp;jours</span>
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+            <i id="shine" class="shine"></i>
+          </div>
+          <p id="url" class="abs centered url display">coltadol.com</p>
+          <p id="fine" class="abs centered fine">Sans carte bancaire · avec votre numéro WhatsApp actuel</p>
+          <div id="cursor" class="abs cursor">
+            <svg width="70" height="70" viewBox="0 0 24 24"><path d="M5 3l13 7-6 1.6L9.5 18z" fill="#eef0fa" stroke="#0b1130" stroke-width="1.2" stroke-linejoin="round" /></svg>
+          </div>
+        </section>
+
+        <p id="caption" class="abs centered caption">Conversations, prospects et chiffres d'exemple.</p>
+      </div>
+
+      <canvas id="fx" width="1080" height="1920"></canvas>
+      <div id="vignette"></div>
+      <canvas id="grain" width="1080" height="1920"></canvas>
+    </div>
+
+    <div id="controls">
+      <button id="play">▶ / ❚❚</button>
+      <input id="scrub" type="range" min="0" max="28" step="0.001" value="0" />
+      <span id="clock">0.00 s</span>
+    </div>
+
+    <script src="engine.js"></script>
+    <script src="timeline.js"></script>
+    <script src="city.js"></script>
+    <script src="fx.js"></script>
+    <script src="scenes.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

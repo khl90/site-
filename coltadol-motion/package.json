@@ -1,0 +1,15 @@
+{
+  "name": "coltadol-motion",
+  "version": "1.0.0",
+  "description": "Publicité motion design 9:16 pour Coltadol — rendu image par image (Chromium + FFmpeg)",
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "audio": "node scripts/audio.mjs",
+    "mux": "node scripts/mux.mjs",
+    "build": "node scripts/render.mjs && node scripts/audio.mjs && node scripts/mux.mjs",
+    "stills": "node scripts/render.mjs --stills",
+    "sheet": "node scripts/sheet.mjs"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
