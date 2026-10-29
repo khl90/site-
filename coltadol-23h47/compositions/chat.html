@@ -1,0 +1,678 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-400-normal.woff2") format("woff2");
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-500-normal.woff2") format("woff2");
+      font-weight: 500;
+    }
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Roboto", sans-serif;
+      color: #111b21;
+    }
+    #c-world {
+      position: absolute;
+      inset: 0;
+    }
+    /* Le fond de conversation : beige WhatsApp, motif maison (maisons, clés, bulles) */
+    #c-wall {
+      position: absolute;
+      inset: 0;
+      background-color: #efeae2;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='%23d6cbb9' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 58 46 38l24 20v26H22Z'/%3E%3Cpath d='M38 84V68h16v16'/%3E%3Ccircle cx='168' cy='40' r='11'/%3E%3Cpath d='M176 48l26 26M192 64l-7 7M199 71l-6 6'/%3E%3Cpath d='M128 150h52a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10h-30l-14 12v-12h-8a10 10 0 0 1-10-10v-24a10 10 0 0 1 10-10Z'/%3E%3Cpath d='M30 150h40v56H30Z'/%3E%3Cpath d='M30 168h40M30 186h40M50 150v56'/%3E%3Cpath d='M212 196c0-12 10-18 10-18s10 6 10 18'/%3E%3Cpath d='M222 178v28'/%3E%3Cpath d='M100 104l6 6 12-12'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+    }
+
+    /* ---------------------------------------------------------------- en-tête */
+    #c-head {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 330px;
+      background: #ffffff;
+      border-bottom: 2px solid #e9edef;
+    }
+    #c-sbar {
+      position: absolute;
+      left: 56px;
+      right: 50px;
+      top: 112px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font: 500 34px/1 "Roboto", sans-serif;
+      color: #111b21;
+    }
+    #c-sbar-ico {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    #c-back {
+      position: absolute;
+      left: 26px;
+      top: 220px;
+    }
+    #c-avatar-slot {
+      position: absolute;
+      left: 114px;
+      top: 198px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: #dfe5e7;
+    }
+    #c-name {
+      position: absolute;
+      left: 236px;
+      top: 196px;
+      font: 500 44px/1.1 "Roboto", sans-serif;
+      color: #111b21;
+    }
+    #c-status {
+      position: absolute;
+      left: 236px;
+      top: 252px;
+      width: 520px;
+      height: 42px;
+      font: 400 32px/42px "Roboto", sans-serif;
+    }
+    #c-status span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: nowrap;
+    }
+    #c-st-seen,
+    #c-st-online {
+      color: #667781;
+    }
+    #c-st-typing {
+      color: #1daa61;
+    }
+    #c-head-ico {
+      position: absolute;
+      right: 36px;
+      top: 214px;
+      display: flex;
+      gap: 46px;
+      align-items: center;
+    }
+
+    /* ---------------------------------------------------------------- le fil */
+    #c-thread-wrap {
+      position: absolute;
+      left: 0;
+      top: 332px;
+      width: 1080px;
+      height: 878px;
+      overflow: hidden;
+    }
+    #c-thread {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 0 0;
+    }
+    .day {
+      align-self: center;
+      margin-bottom: 26px;
+      background: #ffffff;
+      color: #54656f;
+      font: 500 28px/1 "Roboto", sans-serif;
+      padding: 12px 24px;
+      border-radius: 14px;
+      box-shadow: 0 2px 1px rgb(11 20 26 / 0.1);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .msg {
+      position: relative;
+      max-width: 820px;
+      padding: 16px 26px 14px;
+      font: 400 40px/52px "Roboto", sans-serif;
+      color: #111b21;
+      border-radius: 22px;
+      box-shadow: 0 2px 1px rgb(11 20 26 / 0.13);
+      margin-top: 24px;
+      opacity: 0;
+    }
+    .msg.out {
+      align-self: flex-end;
+      margin-right: 44px;
+      background: #d9fdd3;
+      border-top-right-radius: 4px;
+    }
+    .msg.in {
+      align-self: flex-start;
+      margin-left: 44px;
+      background: #ffffff;
+      border-top-left-radius: 4px;
+    }
+    .msg.out::after,
+    .msg.in::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 22px;
+      height: 26px;
+    }
+    .msg.out::after {
+      right: -20px;
+      background: #d9fdd3;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+    .msg.in::after {
+      left: -20px;
+      background: #ffffff;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+    /* La place de l'heure en fin de dernière ligne, comme WhatsApp */
+    .pad {
+      display: inline-block;
+      width: 150px;
+      height: 1px;
+    }
+    .msg.in .pad {
+      width: 104px;
+    }
+    .meta {
+      position: absolute;
+      right: 20px;
+      bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font: 400 28px/1 "Roboto", sans-serif;
+      color: #667781;
+    }
+    .ticks path {
+      stroke: #8696a0;
+    }
+    .mk {
+      background-image: linear-gradient(rgb(92 230 165 / 0.6), rgb(92 230 165 / 0.6));
+      background-repeat: no-repeat;
+      background-size: 0% 100%;
+      border-radius: 6px;
+      padding: 0 4px;
+      margin: 0 -4px;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+    }
+    .typing {
+      position: absolute;
+      left: 44px;
+      width: 150px;
+      height: 82px;
+      background: #ffffff;
+      border-radius: 22px;
+      border-top-left-radius: 4px;
+      box-shadow: 0 2px 1px rgb(11 20 26 / 0.13);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+    }
+    .typing::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -20px;
+      width: 22px;
+      height: 26px;
+      background: #ffffff;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+    .typing i {
+      display: block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #8696a0;
+    }
+
+    /* ------------------------------------------------------ barre de saisie */
+    #c-input {
+      position: absolute;
+      left: 22px;
+      top: 1222px;
+      width: 884px;
+      height: 102px;
+      background: #ffffff;
+      border-radius: 51px;
+      box-shadow: 0 2px 1px rgb(11 20 26 / 0.1);
+    }
+    #c-in-box {
+      position: absolute;
+      left: 96px;
+      top: 0;
+      width: 600px;
+      height: 102px;
+      overflow: hidden;
+      font: 400 40px/102px "Roboto", sans-serif;
+    }
+    #c-in-ph {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #8696a0;
+    }
+    #c-in-text {
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: pre;
+      color: #111b21;
+    }
+    #c-caret {
+      position: absolute;
+      top: 28px;
+      width: 3px;
+      height: 46px;
+      background: #1daa61;
+    }
+    #c-send {
+      position: absolute;
+      left: 924px;
+      top: 1222px;
+      width: 102px;
+      height: 102px;
+      border-radius: 50%;
+      background: #1daa61;
+      display: grid;
+      place-items: center;
+    }
+    #c-send svg {
+      position: absolute;
+      left: 31px;
+      top: 31px;
+    }
+
+    /* --------------------------------------------- clavier AZERTY (décor) */
+    #c-kbd {
+      position: absolute;
+      left: 0;
+      top: 1340px;
+      width: 1080px;
+      height: 580px;
+      background: #e3e5e8;
+    }
+    #c-kbd-sugg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font: 400 34px/1 "Roboto", sans-serif;
+      color: #3c4043;
+    }
+    .key {
+      position: absolute;
+      height: 104px;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 3px 0 #c3c6cb;
+      font: 400 46px/104px "Roboto", sans-serif;
+      color: #202124;
+      text-align: center;
+    }
+    .key.fn {
+      background: #cfd3d9;
+      font-size: 32px;
+    }
+    #c-key-hl {
+      position: absolute;
+      height: 104px;
+      border-radius: 14px;
+      background: #b9bec5;
+      opacity: 0;
+    }
+
+    /* ----------------------------------------------------- titres « TikTok » */
+    .tt {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .tt-l {
+      display: block;
+      background: #0b1130;
+      color: #eef0fa;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 80%;
+      letter-spacing: -0.015em;
+      border-radius: 20px;
+      padding: 0.08em 0.3em 0.12em;
+      box-shadow: 0 18px 40px rgb(11 17 48 / 0.28);
+    }
+    .tt-l .w {
+      display: inline-block;
+    }
+    .tt-big {
+      font-size: 150px;
+      line-height: 1;
+    }
+    .tt-mid {
+      font-size: 84px;
+      line-height: 1.05;
+    }
+    .tt-l .lamp {
+      color: #ffb347;
+    }
+  </style>
+
+  <div id="root" data-composition-id="chat" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="c-world">
+      <div id="c-wall"></div>
+
+      <div id="c-thread-wrap" data-layout-allow-overflow>
+        <div id="c-thread">
+          <div class="day" data-layout-allow-occlusion>Aujourd'hui</div>
+          <div id="m-b1" class="msg out" data-layout-allow-occlusion>Bonjour, le T3 près du parc est toujours disponible&nbsp;?<span class="pad"></span><span class="meta">23:47 <svg class="ticks" id="tk-b1" width="34" height="22" viewBox="0 0 34 22" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l6 6L20 4" /><path d="M14 18l2 0L28 4" /></svg></span></div>
+          <div id="m-a1" class="msg in" data-layout-allow-occlusion>Bonjour&nbsp;! Oui, il est toujours disponible. Vous cherchez à acheter ou à louer&nbsp;?<span class="pad"></span><span class="meta">23:47</span></div>
+          <div id="m-b2" class="msg out" data-layout-allow-occlusion><span id="mk-b2a" class="mk">À acheter.</span> On doit déménager <span id="mk-b2b" class="mk">avant fin novembre</span>, notre bail se termine.<span class="pad"></span><span class="meta">23:48 <svg class="ticks" id="tk-b2" width="34" height="22" viewBox="0 0 34 22" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l6 6L20 4" /><path id="tk-b2-2" d="M14 18l2 0L28 4" /></svg></span></div>
+          <div id="m-a2" class="msg in" data-layout-allow-occlusion>C'est noté. Quel budget envisagez-vous&nbsp;?<span class="pad"></span><span class="meta">23:48</span></div>
+          <div id="m-b3" class="msg out" data-layout-allow-occlusion>Autour de <span id="mk-b3a" class="mk">320&nbsp;000&nbsp;€</span>, jusqu'à <span id="mk-b3b" class="mk">350&nbsp;000&nbsp;€</span> s'il y a un balcon.<span class="pad"></span><span class="meta">23:49 <svg class="ticks" id="tk-b3" width="34" height="22" viewBox="0 0 34 22" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l6 6L20 4" /><path id="tk-b3-2" d="M14 18l2 0L28 4" /></svg></span></div>
+          <div id="m-a3" class="msg in" data-layout-allow-occlusion>C'est noté&nbsp;: achat d'un T3 à Lyon 6e, budget de 320&nbsp;000 à 350&nbsp;000&nbsp;€. Un conseiller va vous contacter rapidement. Souhaitez-vous ajouter quelque chose&nbsp;?<span class="pad"></span><span class="meta">23:49</span></div>
+          <div id="ty-1" class="typing"><i id="ty-1a"></i><i id="ty-1b"></i><i id="ty-1c"></i></div>
+          <div id="ty-2" class="typing"><i id="ty-2a"></i><i id="ty-2b"></i><i id="ty-2c"></i></div>
+          <div id="ty-3" class="typing"><i id="ty-3a"></i><i id="ty-3b"></i><i id="ty-3c"></i></div>
+        </div>
+      </div>
+
+      <div id="c-head" data-layout-allow-occlusion>
+        <div id="c-sbar">
+          <span>23:47</span>
+          <span id="c-sbar-ico">
+            <svg width="40" height="30" viewBox="0 0 40 30" fill="#111b21"><rect x="0" y="20" width="6" height="10" rx="1.5" /><rect x="10" y="14" width="6" height="16" rx="1.5" /><rect x="20" y="7" width="6" height="23" rx="1.5" /><rect x="30" y="0" width="6" height="30" rx="1.5" /></svg>
+            <svg width="40" height="30" viewBox="0 0 40 30" fill="none" stroke="#111b21" stroke-width="4" stroke-linecap="round"><path d="M3 10a25 25 0 0 1 34 0" /><path d="M9 17a16 16 0 0 1 22 0" /><circle cx="20" cy="25" r="3" fill="#111b21" stroke="none" /></svg>
+            <svg width="58" height="30" viewBox="0 0 58 30"><rect x="1.5" y="3.5" width="48" height="23" rx="6" fill="none" stroke="#111b21" stroke-width="3" /><rect x="6" y="8" width="24" height="14" rx="3" fill="#111b21" /><rect x="52" y="11" width="4" height="8" rx="2" fill="#111b21" /></svg>
+          </span>
+        </div>
+        <svg id="c-back" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#111b21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+        <div id="c-avatar-slot"></div>
+        <div id="c-name">Agence du Parc</div>
+        <div id="c-status">
+          <span id="c-st-seen">vu aujourd'hui à 19:02</span>
+          <span id="c-st-online">en ligne</span>
+          <span id="c-st-typing">écrit…</span>
+        </div>
+        <div id="c-head-ico">
+          <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#54656f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="3" /><path d="M16 10.5l6-3.5v10l-6-3.5" /></svg>
+          <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#54656f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.8 2Z" /></svg>
+          <svg width="16" height="50" viewBox="0 0 6 24" fill="#54656f"><circle cx="3" cy="5" r="2.4" /><circle cx="3" cy="12" r="2.4" /><circle cx="3" cy="19" r="2.4" /></svg>
+        </div>
+      </div>
+
+      <div id="c-input">
+        <svg style="position: absolute; left: 30px; top: 29px" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#54656f" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><circle cx="9" cy="9.5" r="0.6" fill="#54656f" /><circle cx="15" cy="9.5" r="0.6" fill="#54656f" /></svg>
+        <div id="c-in-box">
+          <span id="c-in-ph">Message</span>
+          <span id="c-in-text"></span>
+          <span id="c-caret"></span>
+        </div>
+        <svg style="position: absolute; left: 722px; top: 29px" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#54656f" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5" /></svg>
+        <svg id="c-cam" style="position: absolute; left: 800px; top: 29px" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#54656f" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" /><circle cx="12" cy="13" r="3.5" /></svg>
+      </div>
+      <div id="c-send">
+        <svg id="c-mic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v4" /></svg>
+        <svg id="c-arrow" width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M3.4 20.4 22 12 3.4 3.6 3.4 10l13 2-13 2Z" /></svg>
+      </div>
+
+      <div id="c-kbd">
+        <div id="c-kbd-sugg"><span>je</span><span>Bonjour</span><span>le</span></div>
+        <div id="c-key-hl"></div>
+        <div id="c-keys"></div>
+      </div>
+    </div>
+
+    <!-- Le crochet : déjà là à la première image -->
+    <div id="c-t1" class="clip tt" data-start="0" data-duration="2.05" data-track-index="1" style="top: 452px">
+      <span class="tt-l tt-big"><span id="c-t1-w0" class="w">23&nbsp;h&nbsp;47.</span></span>
+      <span class="tt-l tt-mid"><span id="c-t1-w1" class="w">L'agence</span> <span id="c-t1-w2" class="w">est</span> <span id="c-t1-w3" class="w lamp">fermée.</span></span>
+    </div>
+    <!-- La question qui ouvre la photo de l'agence -->
+    <div id="c-t2" class="clip tt" data-start="12.85" data-duration="1.4" data-track-index="1" style="top: 560px">
+      <span id="c-t2-box" class="tt-l tt-big" style="font-size: 124px"><span id="c-t2-w0" class="w">Qui</span> <span id="c-t2-w1" class="w">a</span> <span id="c-t2-w2" class="w">répondu&nbsp;?</span></span>
+    </div>
+  </div>
+
+  <script>
+    // Les bulles et la saisie se mesurent une fois, police chargée
+    Promise.all([document.fonts.load('400 40px "Roboto"'), document.fonts.load('500 44px "Roboto"')]).then(function () {
+      const T = window.T;
+      const tl = gsap.timeline({ paused: true });
+      const root = document.querySelector('[data-composition-id="chat"]');
+      const $ = (s) => root.querySelector(s);
+
+      const B2 = "À acheter. On doit déménager avant fin novembre, notre bail se termine.";
+      const B3 = "Autour de 320 000 €, jusqu'à 350 000 € s'il y a un balcon.";
+
+      // ---------------------------------------------------------------- clavier
+      const ROWS = [
+        { y: 100, keys: "azertyuiop".split("").map((k) => [k, 97]) },
+        { y: 218, keys: "qsdfghjklm".split("").map((k) => [k, 97]) },
+        { y: 336, keys: [["⇧", 147, 1], ...["w", "x", "c", "v", "b", "n", "'"].map((k) => [k, 97]), ["⌫", 147, 1]] },
+        { y: 454, keys: [["?123", 147, 1], [",", 97], [" ", 536], [".", 97], ["↵", 147, 1]] },
+      ];
+      const keyBox = {};
+      const keysEl = $("#c-keys");
+      ROWS.forEach((row) => {
+        const total = row.keys.reduce((s, k) => s + k[1], 0) + (row.keys.length - 1) * 10;
+        let x = (1080 - total) / 2;
+        row.keys.forEach(([label, w, fn]) => {
+          const k = document.createElement("div");
+          k.className = "key" + (fn ? " fn" : "");
+          k.style.left = x + "px";
+          k.style.top = row.y + "px";
+          k.style.width = w + "px";
+          k.textContent = label === " " ? "Français" : label;
+          if (label === " ") {
+            k.style.fontSize = "30px";
+            k.style.color = "#5f6368";
+          }
+          keysEl.appendChild(k);
+          keyBox[label] = { x, y: row.y, w };
+          x += w + 10;
+        });
+      });
+      const keyFor = (ch) => {
+        const c = ch.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+        return keyBox[c] || null;
+      };
+
+      // ------------------------------------------------- mesures (une fois)
+      const box = $("#c-in-box");
+      const textEl = $("#c-in-text");
+      const widths = (s) => {
+        const out = [0];
+        for (let n = 1; n <= s.length; n++) {
+          textEl.textContent = s.slice(0, n);
+          out.push(textEl.getBoundingClientRect().width);
+        }
+        textEl.textContent = "";
+        return out;
+      };
+      const W2 = widths(B2);
+      const W3 = widths(B3);
+      const BOXW = 600;
+
+      const wrapH = 878;
+      const pos = {};
+      ["m-b1", "m-a1", "m-b2", "m-a2", "m-b3", "m-a3"].forEach((id) => {
+        const el = $("#" + id);
+        pos[id] = { top: el.offsetTop, h: el.offsetHeight };
+      });
+      // Les bulles « écrit… » se posent exactement là où arrivera la réponse
+      [["ty-1", "m-a1"], ["ty-2", "m-a2"], ["ty-3", "m-a3"]].forEach(([ty, m]) => {
+        $("#" + ty).style.top = pos[m].top + "px";
+      });
+      const Y = (id) => wrapH - 20 - (pos[id].top + pos[id].h);
+      const Yty = (id) => wrapH - 20 - (pos[id].top + 82);
+
+      // -------------------------------------------- états discrets, par le temps
+      const st = { seen: $("#c-st-seen"), online: $("#c-st-online"), typing: $("#c-st-typing") };
+      const ph = $("#c-in-ph");
+      const caret = $("#c-caret");
+      const hl = $("#c-key-hl");
+      const mic = $("#c-mic");
+      const arrow = $("#c-arrow");
+      const ticks = {
+        b1: [$("#tk-b1")],
+        b2: [$("#tk-b2"), $("#tk-b2-2")],
+        b3: [$("#tk-b3"), $("#tk-b3-2")],
+      };
+      const tickState = (el2, sent, delivered, read) => {
+        // une coche à l'envoi, deux à la réception, bleues une fois lu
+        const paths = el2[0].querySelectorAll("path");
+        const col = read ? "#53bdeb" : "#8696a0";
+        paths.forEach((p) => (p.style.stroke = col));
+        if (el2[1]) el2[1].style.opacity = delivered ? 1 : 0;
+      };
+      const typingWin = [
+        [T.typing1, T.a1],
+        [T.typing2, T.a2],
+        [T.typing3, T.a3],
+      ];
+
+      function render(t) {
+        // Statut de l'agence dans l'en-tête
+        let s = t < T.read1 ? "seen" : "online";
+        typingWin.forEach(([a, b]) => {
+          if (t >= a && t < b) s = "typing";
+        });
+        st.seen.style.opacity = s === "seen" ? 1 : 0;
+        st.online.style.opacity = s === "online" ? 1 : 0;
+        st.typing.style.opacity = s === "typing" ? 1 : 0;
+
+        // Coches
+        tickState(ticks.b1, true, true, t >= T.read1);
+        tickState(ticks.b2, true, t >= T.b2Send + 0.15, t >= T.b2Send + 0.45);
+        tickState(ticks.b3, true, t >= T.b3Send + 0.15, t >= T.b3Send + 0.45);
+
+        // Saisie de l'acheteur
+        let txt = "";
+        let w = 0;
+        let ch = null;
+        const typed = (start, end, str, ws) => {
+          if (t < start || t >= end) return false;
+          const n = Math.min(str.length, Math.floor(((t - start) / (end - 0.08 - start)) * str.length));
+          txt = str.slice(0, n);
+          w = ws[n];
+          ch = n > 0 && n < str.length ? str[n - 1] : null;
+          return true;
+        };
+        const typing = typed(T.b2Type, T.b2Send, B2, W2) || typed(T.b3Type, T.b3Send, B3, W3);
+        textEl.textContent = txt;
+        const shift = Math.min(0, BOXW - 10 - w);
+        textEl.style.transform = "translateX(" + shift + "px)";
+        ph.style.opacity = txt ? 0 : 1;
+        caret.style.opacity = typing ? 1 : 0;
+        caret.style.left = Math.min(BOXW - 8, w + 2) + "px";
+        mic.style.opacity = typing ? 0 : 1;
+        arrow.style.opacity = typing ? 1 : 0;
+        const k = ch ? keyFor(ch) : null;
+        if (k) {
+          hl.style.opacity = 1;
+          hl.style.left = k.x + "px";
+          hl.style.top = k.y + "px";
+          hl.style.width = k.w + "px";
+        } else {
+          hl.style.opacity = 0;
+        }
+      }
+
+      const clock = { t: 0 };
+      tl.fromTo(clock, { t: 0 }, { t: 14.6, duration: 14.6, ease: "none", onUpdate: () => render(clock.t) }, 0);
+
+      // ------------------------------------------------------- le fil qui monte
+      const thread = $("#c-thread");
+      tl.fromTo(thread, { y: Y("m-b1") }, { y: Y("m-b1"), duration: 0.01 }, 0);
+      const step = (y, at) => tl.to(thread, { y, duration: 0.3, ease: "power3.out" }, at);
+      const bubble = (id, at, origin) =>
+        tl.fromTo("#" + id, { opacity: 0, scale: 0.9, transformOrigin: origin }, { opacity: 1, scale: 1, duration: 0.32, ease: "expo.out" }, at);
+      tl.set("#m-b1", { opacity: 1 }, 0);
+
+      const typingBubble = (n, a, b) => {
+        tl.fromTo("#ty-" + n, { opacity: 0, scale: 0.8, transformOrigin: "0% 0%" }, { opacity: 1, scale: 1, duration: 0.22, ease: "expo.out" }, a);
+        tl.to("#ty-" + n, { opacity: 0, duration: 0.06 }, b - 0.02);
+        const reps = Math.max(0, Math.floor((b - a) / 0.25) - 1);
+        ["a", "b", "c"].forEach((d, i) => {
+          tl.fromTo("#ty-" + n + d, { y: 0, opacity: 0.45 }, { y: -10, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: reps }, a + i * 0.12);
+        });
+      };
+
+      typingBubble(1, T.typing1, T.a1);
+      step(Yty("m-a1"), T.typing1);
+      bubble("m-a1", T.a1, "0% 0%");
+      step(Y("m-a1"), T.a1);
+
+      bubble("m-b2", T.b2Send, "100% 0%");
+      step(Y("m-b2"), T.b2Send);
+      tl.fromTo("#mk-b2a", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.3, ease: "power2.out" }, T.b2Mark[0]);
+      tl.fromTo("#mk-b2b", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.4, ease: "power2.out" }, T.b2Mark[1]);
+
+      typingBubble(2, T.typing2, T.a2);
+      step(Yty("m-a2"), T.typing2);
+      bubble("m-a2", T.a2, "0% 0%");
+      step(Y("m-a2"), T.a2);
+
+      bubble("m-b3", T.b3Send, "100% 0%");
+      step(Y("m-b3"), T.b3Send);
+      tl.fromTo("#mk-b3a", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.3, ease: "power2.out" }, T.b3Mark[0]);
+      tl.fromTo("#mk-b3b", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.3, ease: "power2.out" }, T.b3Mark[1]);
+
+      typingBubble(3, T.typing3, T.a3);
+      step(Yty("m-a3"), T.typing3);
+      bubble("m-a3", T.a3, "0% 0%");
+      step(Y("m-a3"), T.a3);
+
+      // --------------------------------------------------------------- titres
+      // Le crochet est là dès la première image ; il sort mot par mot
+      ["#c-t1-w0", "#c-t1-w1", "#c-t1-w2", "#c-t1-w3"].forEach((w, i) => {
+        tl.fromTo(w, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, T.hookOut + i * 0.04);
+      });
+      tl.fromTo("#c-t1 .tt-l", { opacity: 1 }, { opacity: 0, duration: 0.16, ease: "power2.in" }, T.hookOut + 0.06);
+
+      // « Qui a répondu ? »
+      tl.fromTo("#c-t2-box", { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.25, ease: "expo.out" }, T.question);
+      ["#c-t2-w0", "#c-t2-w1", "#c-t2-w2"].forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out" }, T.question + 0.05 + i * 0.07);
+      });
+      tl.to("#c-t2-box", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power3.in" }, T.zoom + 0.05);
+
+      // ---------------------------------------------- poussée vers l'avatar
+      tl.fromTo("#c-world", { scale: 1, filter: "blur(0px)", transformOrigin: "162px 246px" }, { scale: 1.12, filter: "blur(14px)", duration: T.zoomEnd - T.zoom, ease: "power3.in" }, T.zoom);
+
+      render(0);
+      window.__timelines["chat"] = tl;
+    });
+  </script>
+</template>
