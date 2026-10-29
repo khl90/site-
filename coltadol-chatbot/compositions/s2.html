@@ -1,0 +1,279 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    #s2-in {
+      position: absolute;
+      inset: 0;
+    }
+    .tk {
+      position: absolute;
+      left: 0;
+      top: 196px;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .tk > span {
+      display: block;
+      background: #ffffff;
+      color: #0b1130;
+      font: 800 54px/1.16 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+      padding: 8px 22px 12px;
+      border-radius: 16px;
+    }
+    .acc {
+      background: #5ce6a5;
+      border-radius: 10px;
+      padding: 0 10px;
+    }
+    /* La fiche prospect de la console, à 2× */
+    .card {
+      position: absolute;
+      left: 60px;
+      top: 410px;
+      width: 960px;
+      height: 880px;
+      border-radius: 48px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), #111a42;
+      box-shadow: 0 50px 100px -40px rgb(3 6 24 / 0.95);
+    }
+    .k {
+      font: 500 30px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #s2-num {
+      position: absolute;
+      left: 48px;
+      top: 92px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 66px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .pill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border: 2px solid rgb(143 152 198 / 0.22);
+      border-radius: 999px;
+      padding: 7px 22px;
+      font: 500 30px/1.2 "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    #s2-ring {
+      position: absolute;
+      left: 712px;
+      top: 40px;
+      width: 200px;
+      height: 200px;
+    }
+    #s2-ring svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+    #s2-score {
+      position: absolute;
+      left: 0;
+      top: 46px;
+      width: 200px;
+      text-align: center;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 84px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    #s2-score-l {
+      position: absolute;
+      left: 0;
+      top: 134px;
+      width: 200px;
+      text-align: center;
+      font: 500 28px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #s2-hot {
+      position: absolute;
+      left: 48px;
+      top: 268px;
+      background: #ffb347;
+      color: #0b1130;
+      font: 700 32px/1 "DM Sans", sans-serif;
+      padding: 13px 26px 15px;
+      border-radius: 999px;
+    }
+    #s2-rule {
+      position: absolute;
+      left: 368px;
+      top: 282px;
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+      white-space: nowrap;
+    }
+    #s2-fields {
+      position: absolute;
+      left: 48px;
+      top: 352px;
+      width: 864px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 106px 106px 144px;
+      gap: 16px;
+    }
+    .f {
+      position: relative;
+      border-radius: 24px;
+      border: 2px solid rgb(92 230 165 / 0.5);
+      background: rgb(11 17 48 / 0.5);
+      padding: 14px 22px;
+    }
+    .f-l {
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    .f-v {
+      position: absolute;
+      left: 22px;
+      right: 18px;
+      top: 54px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font: 500 33px/1.22 "DM Sans", sans-serif;
+    }
+    .f-v svg {
+      flex: none;
+      margin-top: 6px;
+    }
+    #s2-foot {
+      position: absolute;
+      left: 48px;
+      top: 760px;
+      width: 864px;
+      border-top: 2px solid rgb(143 152 198 / 0.16);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font: 500 32px/1.3 "DM Sans", sans-serif;
+    }
+    #s2-mode {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    #s2-mode i {
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffb347;
+    }
+    .note {
+      position: absolute;
+      left: 0;
+      top: 1306px;
+      width: 1080px;
+      text-align: center;
+      font: 500 24px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+  </style>
+  <div id="root" data-composition-id="s2" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="s2-in">
+      <div class="tk"><span>1. Il ne répond pas juste.</span><span>Il <em class="acc" style="font-style: normal">qualifie</em> chaque prospect.</span></div>
+      <div class="card">
+        <div class="k" style="position: absolute; left: 48px; top: 48px">Nouveau prospect WhatsApp</div>
+        <div id="s2-num">+33 6 •• •• 41 18</div>
+        <div style="position: absolute; left: 48px; top: 180px; width: 220px; height: 54px">
+          <span id="s2-st-new" class="pill" style="color: #8f98c6">Nouveau</span>
+          <span id="s2-st-ok" class="pill" style="color: #5ce6a5; border-color: rgb(92 230 165 / 0.45)">Qualifié</span>
+        </div>
+        <div id="s2-ring">
+          <svg viewBox="0 0 120 120" width="200" height="200">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.16)" stroke-width="8" />
+            <circle id="s2-ring-c" cx="60" cy="60" r="52" fill="none" stroke="#ffb347" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="26.14" />
+            <line x1="60" y1="3" x2="60" y2="15" stroke="#ffb347" stroke-width="2.5" transform="rotate(252 60 60)" />
+          </svg>
+          <div id="s2-score">92</div>
+          <div id="s2-score-l">score</div>
+        </div>
+        <span id="s2-hot">Prospect chaud</span>
+        <span id="s2-rule">Chaud dès 70, ou si l'urgence est haute</span>
+        <div id="s2-fields">
+          <div class="f"><div class="f-l">Projet</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Achat</span></div></div>
+          <div class="f"><div class="f-l">Type de bien</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>T3 (2 chambres)</span></div></div>
+          <div class="f"><div class="f-l">Ville</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Lyon 6e</span></div></div>
+          <div class="f"><div class="f-l">Chambres</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>2</span></div></div>
+          <div class="f"><div class="f-l">Budget</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>320 k€ – 350 k€</span></div></div>
+          <div class="f"><div class="f-l">Urgence</div><div class="f-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Haute, fin de bail en nov.</span></div></div>
+        </div>
+        <div id="s2-foot">
+          <span style="color: #5ce6a5">Rien ne manque</span>
+          <span id="s2-mode"><span class="k">Réponse IA</span><i></i><span style="color: #ffb347">Passée à l'humain</span></span>
+        </div>
+      </div>
+      <div class="note" data-layout-ignore>Prospect d'exemple.</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = window.S;
+      const tl = gsap.timeline({ paused: true });
+      const root = document.querySelector('[data-composition-id="s2"]');
+      const life = S.B[2] - S.B[1];
+      tl.fromTo("#s2-in", { x: 1080 }, { x: 0, duration: S.SWIPE, ease: "power3.inOut" }, 0);
+
+      // La fiche se remplit : champs, score qui monte, prospect chaud, qualifié, passé à l'humain
+      const fields = root.querySelectorAll(".f");
+      fields.forEach((f, i) => {
+        tl.fromTo(f.querySelector(".f-v"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.28, ease: "expo.out" }, 0.45 + i * 0.09);
+        tl.fromTo(f, { borderColor: "rgba(143,152,198,0.18)" }, { borderColor: "rgba(92,230,165,0.5)", duration: 0.25 }, 0.45 + i * 0.09);
+      });
+      const score = { v: 0 };
+      const ring = root.querySelector("#s2-ring-c");
+      const num = root.querySelector("#s2-score");
+      const show = () => {
+        num.textContent = String(Math.round(score.v));
+        ring.setAttribute("stroke-dashoffset", String(326.73 * (1 - score.v / 100)));
+        ring.setAttribute("stroke", score.v >= 70 ? "#ffb347" : "#5ce6a5");
+      };
+      tl.fromTo(score, { v: 0 }, { v: 92, duration: 1.1, ease: "power2.out", onUpdate: show }, 0.5);
+      show();
+      tl.fromTo("#s2-hot", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 1.75);
+      tl.fromTo("#s2-rule", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.85);
+      tl.fromTo("#s2-st-new", { opacity: 1 }, { opacity: 0, duration: 0.15 }, 1.95);
+      tl.fromTo("#s2-st-ok", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.97);
+      tl.fromTo("#s2-foot", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "expo.out" }, 2.1);
+
+      tl.to("#s2-in", { x: -1080, duration: S.SWIPE, ease: "power3.inOut" }, life);
+      window.__timelines["s2"] = tl;
+    })();
+  </script>
+</template>

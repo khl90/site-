@@ -1,0 +1,91 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #s1-in {
+      position: absolute;
+      inset: 0;
+    }
+    /* Le « C » ouvert du logo, en ambre : une question qui attend sa réponse */
+    #s1-ring {
+      position: absolute;
+      left: -35px;
+      top: 161px;
+    }
+    #s1-quote {
+      position: absolute;
+      left: 0;
+      top: 548px;
+      width: 1080px;
+      text-align: center;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 80%;
+      font-size: 142px;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      color: #eef0fa;
+    }
+    #s1-quote .lamp {
+      color: #ffb347;
+    }
+    .tk {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .tk span {
+      display: block;
+      background: #ffffff;
+      color: #0b1130;
+      font: 800 54px/1.16 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+      padding: 8px 22px 12px;
+      border-radius: 16px;
+    }
+    #s1-cta span {
+      background: #5ce6a5;
+    }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="s1-in">
+      <svg id="s1-ring" viewBox="0 0 32 32" width="1150" height="1150" fill="none">
+        <path d="M23.55 7.71a10.5 10.5 0 1 0 0 14.58" stroke="#ffb347" stroke-width="1.15" stroke-linecap="round" />
+        <path d="M6.9 20.25 4.5 28l6.25-3.9Z" fill="#ffb347" stroke="#ffb347" stroke-width="0.6" stroke-linejoin="round" />
+      </svg>
+      <div id="s1-quote">« C'est juste<br />un <span class="lamp">chatbot</span>&nbsp;? »</div>
+      <div id="s1-sub" class="tk" style="top: 1012px"><span>La première question</span><span>des directeurs d'agence.</span></div>
+      <div id="s1-cta" class="tk" style="top: 1196px"><span id="s1-cta-s">Ma réponse en 4 slides →</span></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = window.S;
+      const tl = gsap.timeline({ paused: true });
+      // Tout est déjà là à la première image (la couverture) ; seule la promesse arrive
+      tl.fromTo("#s1-cta-s", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 0.64);
+      // Sortie : balayage vers la gauche
+      const out = S.B[1] - S.B[0];
+      tl.fromTo("#s1-in", { x: 0 }, { x: -1080, duration: S.SWIPE, ease: "power3.inOut" }, out);
+      window.__timelines["s1"] = tl;
+    })();
+  </script>
+</template>

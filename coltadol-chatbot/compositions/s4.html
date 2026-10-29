@@ -1,0 +1,236 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    #s4-in {
+      position: absolute;
+      inset: 0;
+    }
+    .tk {
+      position: absolute;
+      left: 0;
+      top: 196px;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .tk > span {
+      display: block;
+      background: #ffffff;
+      color: #0b1130;
+      font: 800 54px/1.16 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+      padding: 8px 22px 12px;
+      border-radius: 16px;
+    }
+    .acc {
+      background: #5ce6a5;
+      border-radius: 10px;
+      padding: 0 10px;
+      font-style: normal;
+    }
+    /* Le moteur de matching : six critères pondérés, un critère non mentionné retiré du calcul */
+    .card {
+      position: absolute;
+      left: 60px;
+      top: 410px;
+      width: 960px;
+      height: 880px;
+      border-radius: 48px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), #111a42;
+      box-shadow: 0 50px 100px -40px rgb(3 6 24 / 0.95);
+    }
+    #s4-for {
+      position: absolute;
+      left: 48px;
+      top: 48px;
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #s4-listing {
+      position: absolute;
+      left: 48px;
+      top: 94px;
+      width: 560px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 64px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    #s4-tally {
+      position: absolute;
+      right: 48px;
+      top: 84px;
+      text-align: right;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 96px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    #s4-tally span {
+      color: #8f98c6;
+    }
+    #s4-tally small {
+      display: block;
+      margin-top: 8px;
+      font: 500 28px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #s4-rows {
+      position: absolute;
+      left: 48px;
+      top: 262px;
+      width: 864px;
+      border-top: 2px solid rgb(143 152 198 / 0.16);
+      padding-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .r {
+      display: grid;
+      grid-template-columns: 300px 1fr 90px;
+      align-items: center;
+      gap: 26px;
+      height: 70px;
+    }
+    .r-l {
+      font: 500 31px/1.1 "DM Sans", sans-serif;
+    }
+    .r-t {
+      position: relative;
+      height: 16px;
+      border-radius: 8px;
+      background: #1a2457;
+      overflow: hidden;
+    }
+    .r-b {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 16px;
+      border-radius: 8px;
+      background: #5ce6a5;
+      transform-origin: 0 50%;
+    }
+    .r-v {
+      text-align: right;
+      font: 600 32px/1 "DM Sans", sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    .r.skip {
+      opacity: 0.5;
+    }
+    .r.skip .r-t {
+      background: none;
+      overflow: visible;
+      height: auto;
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #s4-foot {
+      position: absolute;
+      left: 48px;
+      top: 738px;
+      width: 864px;
+      border-top: 2px solid rgb(143 152 198 / 0.16);
+      padding-top: 26px;
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+    #s4-pct {
+      flex: none;
+      background: #5ce6a5;
+      color: #0b1130;
+      font: 700 34px/1 "DM Sans", sans-serif;
+      padding: 13px 26px 15px;
+      border-radius: 999px;
+    }
+    #s4-min {
+      font: 500 28px/1.25 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    .note {
+      position: absolute;
+      left: 0;
+      top: 1306px;
+      width: 1080px;
+      text-align: center;
+      font: 500 24px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+  </style>
+  <div id="root" data-composition-id="s4" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="s4-in">
+      <div class="tk"><span>3. Il trouve <em class="acc">le bien</em></span><span>à proposer à chacun.</span></div>
+      <div class="card">
+        <div id="s4-for">Meilleur match pour +33 6 •• •• 41 18</div>
+        <div id="s4-listing">T3 avec balcon, Lyon 6e</div>
+        <div id="s4-tally"><b id="s4-n">93</b><span>/93</span><small>points retenus</small></div>
+        <div id="s4-rows">
+          <div class="r"><span class="r-l">Localisation</span><span class="r-t"><i id="s4-b0" class="r-b" style="width: 100%"></i></span><span class="r-v">+25</span></div>
+          <div class="r"><span class="r-l">Achat ou location</span><span class="r-t"><i id="s4-b1" class="r-b" style="width: 80%"></i></span><span class="r-v">+20</span></div>
+          <div class="r"><span class="r-l">Type de bien</span><span class="r-t"><i id="s4-b2" class="r-b" style="width: 80%"></i></span><span class="r-v">+20</span></div>
+          <div class="r"><span class="r-l">Budget</span><span class="r-t"><i id="s4-b3" class="r-b" style="width: 80%"></i></span><span class="r-v">+20</span></div>
+          <div class="r"><span class="r-l">Chambres</span><span class="r-t"><i id="s4-b4" class="r-b" style="width: 32%"></i></span><span class="r-v">+8</span></div>
+          <div id="s4-skip" class="r skip"><span class="r-l">Surface</span><span class="r-t">Non mentionné, retiré du calcul</span><span class="r-v">–</span></div>
+        </div>
+        <div id="s4-foot"><span id="s4-pct">Match à 100&nbsp;%</span><span id="s4-min">Les biens apparaissent à partir de 60&nbsp;%.</span></div>
+      </div>
+      <div class="note" data-layout-ignore>Bien et prospect d'exemple.</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = window.S;
+      const tl = gsap.timeline({ paused: true });
+      const root = document.querySelector('[data-composition-id="s4"]');
+      const life = S.B[4] - S.B[3];
+      tl.fromTo("#s4-in", { x: 1080 }, { x: 0, duration: S.SWIPE, ease: "power3.inOut" }, 0);
+
+      // Chaque critère remplit sa barre ; le total compte 25, 45, 65, 85, 93 ; la surface est retirée du calcul
+      const pts = [25, 20, 20, 20, 8];
+      const n = root.querySelector("#s4-n");
+      const tally = { v: 0 };
+      const show = () => (n.textContent = String(Math.round(tally.v)));
+      let acc = 0;
+      pts.forEach((p, i) => {
+        const at = 0.45 + i * 0.2;
+        tl.fromTo("#s4-b" + i, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power3.out" }, at);
+        tl.fromTo(tally, { v: acc }, { v: acc + p, duration: 0.3, ease: "power2.out", onUpdate: show, immediateRender: i === 0 }, at);
+        acc += p;
+      });
+      tl.fromTo("#s4-skip", { opacity: 0 }, { opacity: 0.5, duration: 0.3 }, 1.45);
+      tl.fromTo("#s4-pct", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 1.8);
+      tl.fromTo("#s4-min", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.95);
+      show();
+
+      tl.to("#s4-in", { x: -1080, duration: S.SWIPE, ease: "power3.inOut" }, life);
+      window.__timelines["s4"] = tl;
+    })();
+  </script>
+</template>
