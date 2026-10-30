@@ -30,7 +30,7 @@ Tous les titres sont des phrases du site : `qualify.title`, `recovery.title`, `d
 |---|---|---|
 | 0,4 s | 2,9 s | Dix-neuf heures. Les agences ferment leurs portes. |
 | 3,4 s | 6,4 s | Mais les acheteurs continuent d'écrire, toute la nuit. |
-| 6,8 s | 9,8 s | À chaque message, une réponse. En quelques secondes, sur WhatsApp. |
+| 6,8 s | 9,8 s | À chaque message, une réponse, dès qu'il arrive, sur WhatsApp. |
 | 10,8 s | 14,4 s | Il pose les bonnes questions, et vous laisse une fiche prête : budget, délai, score. |
 | 15,4 s | 18,6 s | Lyon, Casablanca, Manchester… Personne n'attend jusqu'au matin. |
 | 19,3 s | 21,8 s | Ceux qui se taisent ? Il vous prépare la relance. |
