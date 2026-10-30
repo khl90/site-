@@ -1,0 +1,278 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    /* L'iris s'ouvre depuis le lien touché dans WhatsApp */
+    #a-iris {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(70% 40% at 80% 18%, rgb(255 179 71 / 0.08), transparent 70%),
+        radial-gradient(80% 50% at 15% 95%, rgb(92 230 165 / 0.07), transparent 70%),
+        #0b1130;
+    }
+    #a-in {
+      position: absolute;
+      inset: 0;
+    }
+    /* L'assistant de la console, à 2× */
+    #a-pane {
+      position: absolute;
+      left: 60px;
+      top: 200px;
+      width: 960px;
+      height: 1110px;
+      border-radius: 48px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), #111a42;
+      box-shadow: 0 50px 100px -40px rgb(3 6 24 / 0.95);
+    }
+    #a-head {
+      position: absolute;
+      left: 48px;
+      right: 48px;
+      top: 44px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    #a-head b {
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    #a-ro {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid rgb(143 152 198 / 0.25);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+      white-space: nowrap;
+    }
+    #a-sub {
+      position: absolute;
+      left: 48px;
+      top: 128px;
+      font: 500 31px/1.3 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #a-rule {
+      position: absolute;
+      left: 48px;
+      right: 48px;
+      top: 196px;
+      height: 2px;
+      background: rgb(143 152 198 / 0.16);
+    }
+    #a-q {
+      position: absolute;
+      right: 48px;
+      top: 236px;
+      max-width: 760px;
+      background: #1a2457;
+      border-radius: 30px;
+      border-bottom-right-radius: 10px;
+      padding: 22px 30px 24px;
+      font: 500 38px/1.3 "DM Sans", sans-serif;
+    }
+    #a-dots {
+      position: absolute;
+      left: 48px;
+      top: 380px;
+      display: flex;
+      gap: 12px;
+      background: rgb(92 230 165 / 0.12);
+      border-radius: 30px;
+      border-bottom-left-radius: 10px;
+      padding: 26px 30px;
+    }
+    #a-dots i {
+      display: block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #5ce6a5;
+    }
+    #a-ans {
+      position: absolute;
+      left: 48px;
+      top: 380px;
+      width: 860px;
+      border: 2px solid rgb(92 230 165 / 0.25);
+      background: rgb(92 230 165 / 0.08);
+      border-radius: 30px;
+      border-bottom-left-radius: 10px;
+      padding: 26px 32px 28px;
+    }
+    #a-text {
+      font: 400 38px/1.42 "DM Sans", sans-serif;
+    }
+    #a-text .w {
+      display: inline;
+    }
+    #a-text .hl {
+      color: #5ce6a5;
+      font-weight: 600;
+    }
+    #a-cons {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #a-cons span.c {
+      border: 2px solid rgb(143 152 198 / 0.25);
+      border-radius: 999px;
+      padding: 6px 16px;
+      color: #eef0fa;
+    }
+    #a-field {
+      position: absolute;
+      left: 48px;
+      right: 48px;
+      bottom: 44px;
+      height: 104px;
+      border-radius: 30px;
+      border: 2px solid rgb(143 152 198 / 0.22);
+      background: rgb(11 17 48 / 0.6);
+    }
+    #a-ph,
+    #a-typed {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      font: 400 36px/100px "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    #a-ph {
+      color: #8f98c6;
+    }
+    #a-send {
+      position: absolute;
+      right: 14px;
+      top: 13px;
+      width: 74px;
+      height: 74px;
+      border-radius: 22px;
+      background: #5ce6a5;
+      display: grid;
+      place-items: center;
+    }
+    .note {
+      position: absolute;
+      left: 0;
+      top: 1322px;
+      width: 1080px;
+      text-align: center;
+      font: 500 24px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+  </style>
+  <div id="root" data-composition-id="assistant" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="a-iris">
+      <div id="a-in">
+        <div id="a-pane">
+          <div id="a-head">
+            <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8" /><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M2 14h2M20 14h2M15 13v2M9 13v2" /></svg>
+            <b>Assistant IA</b>
+            <span id="a-ro"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8f98c6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>Lecture seule</span>
+          </div>
+          <div id="a-sub">Il lit vos prospects, vos biens et vos relances.</div>
+          <div id="a-rule"></div>
+          <div id="a-q">Qui dois-je appeler en premier&nbsp;?</div>
+          <div id="a-dots"><i id="a-d1"></i><i id="a-d2"></i><i id="a-d3"></i></div>
+          <div id="a-ans">
+            <div id="a-text"></div>
+            <div id="a-cons"><span>Consulté</span><span class="c">Prospects</span><span class="c">Fiche prospect</span><span class="c">Relances en retard</span></div>
+          </div>
+          <div id="a-field">
+            <span id="a-ph">Posez une question sur votre pipeline</span>
+            <span id="a-typed"></span>
+            <span id="a-send"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0b1130" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></svg></span>
+          </div>
+        </div>
+        <div class="note" data-layout-ignore>Réponse d'exemple.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const T = window.T;
+      const L = (t) => t - 8.15;
+      const root = document.querySelector('[data-composition-id="assistant"]');
+      const $ = (s) => root.querySelector(s);
+      const tl = gsap.timeline({ paused: true });
+
+      // L'iris part du lien touché dans WhatsApp
+      tl.fromTo("#a-iris", { clipPath: "circle(0px at 440px 1008px)" }, { clipPath: "circle(2300px at 440px 1008px)", duration: T.irisEnd - T.iris, ease: "power2.in" }, 0);
+
+      // La question se tape dans le champ, puis part
+      const Q = "Qui dois-je appeler en premier ?";
+      const typed = $("#a-typed");
+      const ph = $("#a-ph");
+      const q = { n: 0 };
+      const showQ = () => {
+        const n = Math.round(q.n);
+        typed.textContent = Q.slice(0, n);
+        ph.style.opacity = n > 0 ? 0 : 1;
+      };
+      tl.fromTo(q, { n: 0 }, { n: Q.length, duration: T.send - 0.05 - T.ask, ease: "none", onUpdate: showQ }, L(T.ask));
+      tl.to(q, { n: 0, duration: 0.01, onUpdate: showQ }, L(T.send));
+      showQ();
+      tl.fromTo("#a-q", { opacity: 0, y: 30, scale: 0.96, transformOrigin: "100% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "expo.out" }, L(T.send));
+
+      // Il réfléchit (il lit les prospects, la fiche, les relances), puis répond mot à mot
+      tl.fromTo("#a-dots", { opacity: 0 }, { opacity: 1, duration: 0.15 }, L(T.think));
+      tl.to("#a-dots", { opacity: 0, duration: 0.08 }, L(T.answer) - 0.05);
+      ["#a-d1", "#a-d2", "#a-d3"].forEach((d, i) => {
+        tl.fromTo(d, { y: 0, opacity: 0.4 }, { y: -10, opacity: 1, duration: 0.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, L(T.think) + i * 0.1);
+      });
+      const A =
+        "Commencez par le +33 6 •• •• 41 18 : score 92, achat à Lyon 6e, et le T3 avec balcon matche à 100 %. Ensuite Karim B., dont le rappel est prévu aujourd'hui à 18 h 30.";
+      const box = $("#a-text");
+      const parts = A.replace(" :", " :").replace("100 %", "100 %").replace("18 h 30", "18 h 30").replace("+33 6 •• •• 41 18", "+33 6 •• •• 41 18").split(" ");
+      parts.forEach((w, i) => {
+        const s = document.createElement("span");
+        s.className = "w" + (w.startsWith("+33") || w === "92," ? " hl" : "");
+        s.id = "a-w" + i;
+        s.textContent = w + (i < parts.length - 1 ? " " : "");
+        box.appendChild(s);
+      });
+      tl.fromTo("#a-ans", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, L(T.answer));
+      parts.forEach((w, i) => {
+        tl.fromTo("#a-w" + i, { opacity: 0 }, { opacity: 1, duration: 0.08 }, L(T.answer) + 0.05 + i * 0.065);
+      });
+      tl.fromTo("#a-cons", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, L(T.consulted));
+
+      // Il décroche son téléphone : balayage vers l'appel
+      tl.to("#a-in", { x: -700, opacity: 0, filter: "blur(16px)", duration: 0.25, ease: "power3.in" }, L(T.whip));
+      window.__timelines["assistant"] = tl;
+    })();
+  </script>
+</template>

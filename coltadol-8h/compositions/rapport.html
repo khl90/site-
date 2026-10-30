@@ -1,0 +1,227 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-400-normal.woff2") format("woff2");
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-500-normal.woff2") format("woff2");
+      font-weight: 500;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-700-normal.woff2") format("woff2");
+      font-weight: 700;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0b141a;
+      font-family: "Roboto", sans-serif;
+      color: #e9edef;
+    }
+    #r-in,
+    #r-cam {
+      position: absolute;
+      inset: 0;
+    }
+    /* WhatsApp en mode sombre ; le motif maison est le même que dans « 23 h 47 », en clair sur sombre */
+    #r-wall {
+      position: absolute;
+      inset: 0;
+      background-color: #0b141a;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 58 46 38l24 20v26H22Z'/%3E%3Cpath d='M38 84V68h16v16'/%3E%3Ccircle cx='168' cy='40' r='11'/%3E%3Cpath d='M176 48l26 26M192 64l-7 7M199 71l-6 6'/%3E%3Cpath d='M128 150h52a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10h-30l-14 12v-12h-8a10 10 0 0 1-10-10v-24a10 10 0 0 1 10-10Z'/%3E%3Cpath d='M30 150h40v56H30Z'/%3E%3Cpath d='M30 168h40M30 186h40M50 150v56'/%3E%3Cpath d='M212 196c0-12 10-18 10-18s10 6 10 18'/%3E%3Cpath d='M222 178v28'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+    }
+    #r-head {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 330px;
+      background: #1f2c34;
+    }
+    #r-sbar {
+      position: absolute;
+      left: 56px;
+      right: 50px;
+      top: 112px;
+      display: flex;
+      justify-content: space-between;
+      font: 500 34px/46px "Roboto", sans-serif;
+    }
+    #r-av {
+      position: absolute;
+      left: 114px;
+      top: 198px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    #r-name {
+      position: absolute;
+      left: 236px;
+      top: 222px;
+      font: 500 44px/1.1 "Roboto", sans-serif;
+    }
+    .day {
+      position: absolute;
+      left: 0;
+      top: 352px;
+      width: 1080px;
+      text-align: center;
+    }
+    .day span {
+      display: inline-block;
+      background: #182229;
+      color: #8696a0;
+      font: 500 28px/1 "Roboto", sans-serif;
+      padding: 12px 24px;
+      border-radius: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    #r-msg {
+      position: absolute;
+      left: 44px;
+      top: 418px;
+      width: 960px;
+      background: #1f2c34;
+      border-radius: 22px;
+      border-top-left-radius: 4px;
+      padding: 20px 28px 52px;
+      font: 400 34px/46px "Roboto", sans-serif;
+      box-shadow: 0 2px 1px rgb(0 0 0 / 0.25);
+    }
+    #r-msg::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -20px;
+      width: 22px;
+      height: 26px;
+      background: #1f2c34;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+    #r-msg b {
+      font-weight: 700;
+    }
+    #r-msg .haze {
+      color: #8696a0;
+    }
+    #r-msg .gap {
+      height: 14px;
+    }
+    #r-prio {
+      position: relative;
+      margin: 0 -12px;
+      padding: 0 12px;
+      border-radius: 14px;
+    }
+    #r-band {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: rgb(92 230 165 / 0.16);
+      transform-origin: 0 50%;
+    }
+    #r-prio div {
+      position: relative;
+    }
+    #r-link {
+      color: #53bdeb;
+      text-decoration: underline;
+      border-radius: 8px;
+      padding: 0 6px;
+      margin: 0 -6px;
+    }
+    #r-time {
+      position: absolute;
+      right: 22px;
+      bottom: 12px;
+      font: 400 28px/1 "Roboto", sans-serif;
+      color: #8696a0;
+    }
+    #r-input {
+      position: absolute;
+      left: 22px;
+      top: 1222px;
+      width: 884px;
+      height: 102px;
+      border-radius: 51px;
+      background: #1f2c34;
+      font: 400 40px/102px "Roboto", sans-serif;
+      color: #8696a0;
+      padding-left: 96px;
+    }
+    #r-mic {
+      position: absolute;
+      left: 924px;
+      top: 1222px;
+      width: 102px;
+      height: 102px;
+      border-radius: 50%;
+      background: #00a884;
+      display: grid;
+      place-items: center;
+    }
+  </style>
+  <div id="root" data-composition-id="rapport" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="r-in">
+      <div id="r-cam">
+        <div id="r-wall"></div>
+        <div class="day"><span>Aujourd'hui</span></div>
+        <div id="r-msg">
+          <div><b>Rapport du matin</b> · Agence du Parc</div>
+          <div class="haze">vendredi 30 octobre</div>
+          <div class="gap"></div>
+          <div>Nouveaux prospects depuis minuit : 2</div>
+          <div>Prospects chauds : 2</div>
+          <div>Relances en retard : 2</div>
+          <div>En attente de réponse : 1</div>
+          <div>Opportunités de biens : 5</div>
+          <div class="gap"></div>
+          <div id="r-prio">
+            <i id="r-band"></i>
+            <div><b>À appeler en priorité</b></div>
+            <div>1. +33 6 •• •• 41 18 · score 92</div>
+            <div>2. Sarah M. · score 74</div>
+            <div>3. +33 7 •• •• 09 52 · score 61</div>
+          </div>
+          <div class="gap"></div>
+          <div>Ouvrir la console : <span id="r-link">coltadol.com</span></div>
+          <span id="r-time">08:00</span>
+        </div>
+      </div>
+      <div id="r-head">
+        <div id="r-sbar"><span>8:00</span><span>●●●</span></div>
+        <svg style="position: absolute; left: 26px; top: 220px" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#e9edef" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+        <div id="r-av">
+          <svg width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" fill="#0b1130" /><rect x="8" y="44" width="18" height="52" fill="#18225c" /><rect x="30" y="30" width="22" height="66" fill="#0e1542" /><rect x="56" y="50" width="16" height="46" fill="#18225c" /><rect x="74" y="38" width="16" height="58" fill="#0e1542" /><rect x="38" y="58" width="6" height="8" fill="#5ce6a5" /><rect x="78" y="48" width="5" height="7" fill="#5ce6a5" /></svg>
+        </div>
+        <div id="r-name">Agence du Parc</div>
+      </div>
+      <div id="r-input">Message</div>
+      <div id="r-mic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v4" /></svg></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const T = window.T;
+      const L = (t) => t - 4.0; // temps local de la scène
+      const tl = gsap.timeline({ paused: true });
+      // WhatsApp s'ouvre un peu grand, puis se pose
+      tl.fromTo("#r-in", { scale: 1.05 }, { scale: 1, duration: 0.5, ease: "expo.out" }, L(T.zoomEnd) - 0.05);
+      // La liste « À appeler en priorité » : la caméra s'approche, la bande verte la marque
+      tl.fromTo("#r-cam", { scale: 1, transformOrigin: "540px 1000px" }, { scale: 1.14, duration: 0.7, ease: "power2.inOut" }, L(T.punch));
+      tl.fromTo("#r-band", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power3.out" }, L(T.punch) + 0.35);
+      // On touche le lien de la console
+      tl.fromTo("#r-link", { backgroundColor: "rgba(83,189,235,0)" }, { backgroundColor: "rgba(83,189,235,0.3)", duration: 0.12 }, L(T.link));
+      window.__timelines["rapport"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,302 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-400-normal.woff2") format("woff2");
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-500-normal.woff2") format("woff2");
+      font-weight: 500;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/roboto-latin-700-normal.woff2") format("woff2");
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #ffffff;
+    }
+    #e-world {
+      position: absolute;
+      inset: 0;
+    }
+    #e-wall {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    #e-date {
+      position: absolute;
+      left: 0;
+      top: 168px;
+      width: 1080px;
+      text-align: center;
+      font: 600 42px/1 "DM Sans", sans-serif;
+      color: rgb(255 255 255 / 0.9);
+    }
+    #e-clock {
+      position: absolute;
+      left: 0;
+      top: 214px;
+      width: 1080px;
+      height: 240px;
+      text-align: center;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 92%;
+      font-size: 236px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    #e-clock span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+    }
+    .tk {
+      position: absolute;
+      left: 0;
+      top: 478px;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .tk > span {
+      display: block;
+      background: #ffffff;
+      color: #0b1130;
+      font: 800 54px/1.16 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+      padding: 8px 22px 12px;
+      border-radius: 16px;
+    }
+    .acc {
+      background: #5ce6a5;
+      border-radius: 10px;
+      padding: 0 10px;
+      font-style: normal;
+    }
+    /* Notifications WhatsApp : ce que Coltadol envoie sur le WhatsApp personnel, depuis le numéro de l'agence */
+    .nt {
+      position: absolute;
+      left: 36px;
+      width: 1008px;
+      border-radius: 44px;
+      background: rgb(250 250 252 / 0.94);
+      box-shadow: 0 14px 40px rgb(3 6 24 / 0.35);
+      padding: 26px 30px 28px 122px;
+      color: #1c1c1e;
+    }
+    .nt-ico {
+      position: absolute;
+      left: 30px;
+      top: 28px;
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      background: #25d366;
+      display: grid;
+      place-items: center;
+    }
+    .nt-h {
+      display: flex;
+      align-items: baseline;
+      font: 700 34px/1.2 "Roboto", sans-serif;
+    }
+    .nt-h small {
+      margin-left: auto;
+      font: 400 29px/1 "Roboto", sans-serif;
+      color: #6b6b70;
+    }
+    .nt-b {
+      margin-top: 6px;
+      font: 400 33px/1.3 "Roboto", sans-serif;
+      color: #1c1c1e;
+    }
+    #e-grow {
+      position: absolute;
+      inset: 0;
+      background: #fafafc;
+      opacity: 0;
+    }
+    .round {
+      position: absolute;
+      top: 1660px;
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: rgb(0 0 0 / 0.32);
+      display: grid;
+      place-items: center;
+    }
+    #e-home {
+      position: absolute;
+      left: 390px;
+      top: 1868px;
+      width: 300px;
+      height: 10px;
+      border-radius: 5px;
+      background: rgb(255 255 255 / 0.85);
+    }
+  </style>
+  <div id="root" data-composition-id="ecran" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="e-world">
+      <canvas id="e-wall" width="1080" height="1920"></canvas>
+      <svg style="position: absolute; left: 520px; top: 104px" width="40" height="44" viewBox="0 0 20 22" fill="none" stroke="#ffffff" stroke-width="2.2"><rect x="2" y="9" width="16" height="12" rx="3" fill="#ffffff" /><path d="M5.5 9V6a4.5 4.5 0 0 1 9 0v3" /></svg>
+      <div id="e-date">vendredi 30 octobre</div>
+      <div id="e-clock"><span id="e-c1">7:59</span><span id="e-c2">8:00</span></div>
+
+      <div id="e-n3" class="nt" style="top: 1068px"><span class="nt-ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" /></svg></span><div class="nt-h">Agence du Parc<small>23:49</small></div><div class="nt-b">Prospect qualifié · +33 6 •• •• 41 18 · Achat · T3 · Lyon 6e · 320–350 k€ · score 92</div></div>
+      <div id="e-n2" class="nt" style="top: 864px"><span class="nt-ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" /></svg></span><div class="nt-h">Agence du Parc<small>01:12</small></div><div class="nt-b">Prospect qualifié · Sarah M. · Location · T4 · Villeurbanne · score 74</div></div>
+      <div id="e-n1" class="nt" style="top: 660px"><span class="nt-ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" /></svg></span><div class="nt-h">Agence du Parc<small>06:40</small></div><div class="nt-b">Prospect qualifié · +33 7 •• •• 09 52 · Achat · maison · Écully · score 61</div></div>
+      <div id="e-n0" class="nt" style="top: 660px"><span class="nt-ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" /></svg></span><div class="nt-h">Agence du Parc<small>maintenant</small></div><div class="nt-b"><b>Rapport du matin</b> · 2 nouveaux prospects depuis minuit, 2 chauds. Les 3 prospects à appeler en priorité sont prêts.</div></div>
+
+      <div class="round" style="left: 112px"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" opacity="0" /><path d="M8 2h8l-2 6v12a2 2 0 0 1-4 0V8Z" /></svg></div>
+      <div class="round" style="left: 856px"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" /><circle cx="12" cy="13" r="3.5" /></svg></div>
+      <div id="e-home"></div>
+    </div>
+    <div id="e-title" class="tk"><span>POV : tu te réveilles.</span><span>3 prospects déjà <em class="acc">qualifiés.</em></span></div>
+    <div id="e-grow"></div>
+  </div>
+  <script>
+    // La hauteur de la notification se mesure une fois, police chargée
+    Promise.all([document.fonts.load('400 33px "Roboto"'), document.fonts.load('700 34px "Roboto"')]).then(function () {
+      const T = window.T;
+      const root = document.querySelector('[data-composition-id="ecran"]');
+      const $ = (s) => root.querySelector(s);
+
+      // ------------------------------- fond d'écran : la ville de la landing à l'aube
+      function seeded(seed) {
+        let s = seed >>> 0;
+        return () => {
+          s = (s + 0x6d2b79f5) | 0;
+          let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const W = 1080;
+      const H = 1920;
+      const ctx = $("#e-wall").getContext("2d");
+      const sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, "#060920");
+      sky.addColorStop(0.45, "#141c52");
+      sky.addColorStop(0.75, "#2a2f78");
+      sky.addColorStop(1, "#3b3577");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, H);
+      const dawn = ctx.createRadialGradient(W * 0.55, H * 0.8, 0, W * 0.55, H * 0.8, H * 0.55);
+      dawn.addColorStop(0, "rgba(255,179,71,0.38)");
+      dawn.addColorStop(1, "rgba(255,179,71,0)");
+      ctx.fillStyle = dawn;
+      ctx.fillRect(0, 0, W, H);
+      const rand = seeded(8);
+      const LAYERS = [
+        { body: "#1b2160", w: 6, h: 9, gx: 11, gy: 15, minH: 0.36, maxH: 0.6 },
+        { body: "#10153f", w: 14, h: 20, gx: 18, gy: 26, minH: 0.24, maxH: 0.46 },
+        { body: "#070a24", w: 26, h: 36, gx: 26, gy: 36, minH: 0.12, maxH: 0.3 },
+      ];
+      LAYERS.forEach((L, li) => {
+        let x = -30;
+        while (x < W + 30) {
+          const cols = 3 + Math.floor(rand() * (li === 2 ? 4 : 6));
+          const tw = cols * (L.w + L.gx) + L.gx;
+          const th = H * (L.minH + rand() * (L.maxH - L.minH));
+          ctx.fillStyle = L.body;
+          ctx.fillRect(x, H - th, tw, th);
+          const rows = Math.floor((th - L.gy) / (L.h + L.gy));
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const p = rand();
+              const wx = x + L.gx + c * (L.w + L.gx);
+              const wy = H - th + L.gy + r * (L.h + L.gy);
+              let col = null;
+              if (li > 0 && p < 0.045) col = "rgba(92,230,165,0.95)";
+              else if (li > 0 && p < 0.05) col = "rgba(255,179,71,0.9)";
+              else if (p < 0.2) col = "rgba(190,200,240," + (0.06 + rand() * 0.1) + ")";
+              if (!col) continue;
+              if (col.startsWith("rgba(92")) {
+                ctx.fillStyle = "rgba(92,230,165,0.16)";
+                ctx.fillRect(wx - 6, wy - 6, L.w + 12, L.h + 12);
+              }
+              ctx.fillStyle = col;
+              ctx.fillRect(wx, wy, L.w, L.h);
+            }
+          }
+          x += tw + 6 + rand() * 20;
+        }
+      });
+      // un voile en haut pour que l'heure se lise
+      const veil = ctx.createLinearGradient(0, 0, 0, 900);
+      veil.addColorStop(0, "rgba(3,5,18,0.45)");
+      veil.addColorStop(1, "rgba(3,5,18,0)");
+      ctx.fillStyle = veil;
+      ctx.fillRect(0, 0, W, 900);
+      const img = ctx.getImageData(0, 0, W, H);
+      const nr = seeded(3);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const n = (nr() - 0.5) * 6;
+        img.data[i] += n;
+        img.data[i + 1] += n;
+        img.data[i + 2] += n;
+      }
+      ctx.putImageData(img, 0, 0);
+
+      const tl = gsap.timeline({ paused: true });
+
+      // 7:59 → 8:00
+      tl.fromTo("#e-c1", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -40, filter: "blur(10px)", duration: 0.25, ease: "power2.in" }, T.flip);
+      tl.fromTo("#e-c2", { opacity: 0, y: 40, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, T.flip + 0.12);
+
+      // Le rapport du matin tombe en haut ; les trois de la nuit se rangent en pile dessous
+      tl.fromTo("#e-n0", { opacity: 0, y: -90, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "expo.out" }, T.report);
+      tl.fromTo("#e-n1", { y: 0, scale: 1, opacity: 1 }, { y: 250, scale: 1, opacity: 1, duration: 0.4, ease: "power3.inOut" }, T.report);
+      tl.fromTo("#e-n2", { y: 0, scale: 1, opacity: 1 }, { y: 70, scale: 0.95, opacity: 0.75, duration: 0.4, ease: "power3.inOut" }, T.report);
+      tl.fromTo("#e-n3", { y: 0, scale: 1, opacity: 1 }, { y: -110, scale: 0.9, opacity: 0.5, duration: 0.4, ease: "power3.inOut" }, T.report);
+      // Dans une pile iOS, on ne voit que le bord des cartes du dessous
+      tl.fromTo("#e-n2 .nt-h, #e-n2 .nt-b, #e-n2 .nt-ico, #e-n3 .nt-h, #e-n3 .nt-b, #e-n3 .nt-ico", { opacity: 1 }, { opacity: 0, duration: 0.25 }, T.report);
+      tl.to("#e-title", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, T.tap - 0.2);
+
+      // On touche le rapport : il s'enfonce, puis grandit jusqu'à couvrir l'écran (et devient WhatsApp)
+      tl.fromTo("#e-n0", { scale: 1 }, { scale: 0.97, duration: 0.08, ease: "power2.in", immediateRender: false }, T.tap);
+      tl.to("#e-n0", { scale: 1, duration: 0.15, ease: "power2.out" }, T.tap + 0.08);
+      const n0 = $("#e-n0");
+      const top = 660;
+      const h = n0.offsetHeight;
+      const ins = (t, r, b, l, rad) => "inset(" + t + "px " + r + "px " + b + "px " + l + "px round " + rad + "px)";
+      tl.fromTo(
+        "#e-grow",
+        { opacity: 1, clipPath: ins(top, 36, 1920 - top - h, 36, 44), backgroundColor: "#fafafc" },
+        { opacity: 1, clipPath: ins(0, 0, 0, 0, 0), backgroundColor: "#0b141a", duration: T.zoomEnd - T.zoom, ease: "power3.in" },
+        T.zoom,
+      );
+      tl.set("#e-grow", { opacity: 0 }, 0);
+      tl.to("#e-n0 .nt-b, #e-n0 .nt-h, #e-n0 .nt-ico", { opacity: 0, duration: 0.12 }, T.zoom);
+      tl.fromTo("#e-world", { scale: 1, filter: "blur(0px)" }, { scale: 1.06, filter: "blur(12px)", duration: T.zoomEnd - T.zoom, ease: "power3.in" }, T.zoom);
+
+      window.__timelines["ecran"] = tl;
+    });
+  </script>
+</template>

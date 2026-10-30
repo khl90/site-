@@ -1,0 +1,158 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: #ffffff;
+      font-family: "DM Sans", sans-serif;
+      background:
+        radial-gradient(90% 45% at 50% 0%, #2c3170 0%, transparent 70%),
+        radial-gradient(70% 40% at 50% 100%, rgb(255 179 71 / 0.12) 0%, transparent 70%),
+        #0b1130;
+    }
+    #p-in {
+      position: absolute;
+      inset: 0;
+    }
+    #p-av {
+      position: absolute;
+      left: 450px;
+      top: 196px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: #3a4074;
+      display: grid;
+      place-items: center;
+    }
+    #p-name {
+      position: absolute;
+      left: 0;
+      top: 402px;
+      width: 1080px;
+      text-align: center;
+      font: 600 76px/1.1 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+    }
+    #p-timer {
+      position: absolute;
+      left: 0;
+      top: 500px;
+      width: 1080px;
+      text-align: center;
+      font: 500 38px/1.2 "DM Sans", sans-serif;
+      color: #b7bde0;
+      font-variant-numeric: tabular-nums;
+    }
+    .tk {
+      position: absolute;
+      left: 0;
+      top: 640px;
+      width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .tk > span {
+      display: block;
+      background: #ffffff;
+      color: #0b1130;
+      font: 800 56px/1.16 "DM Sans", sans-serif;
+      letter-spacing: -0.01em;
+      padding: 8px 22px 12px;
+      border-radius: 16px;
+    }
+    .acc {
+      background: #ffb347;
+      border-radius: 10px;
+      padding: 0 10px;
+      font-style: normal;
+    }
+    #p-grid {
+      position: absolute;
+      left: 150px;
+      top: 960px;
+      width: 780px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      row-gap: 50px;
+      justify-items: center;
+    }
+    .b {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      font: 500 28px/1 "DM Sans", sans-serif;
+      color: #e5e7f5;
+    }
+    .b i {
+      display: grid;
+      place-items: center;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgb(255 255 255 / 0.14);
+    }
+    #p-end {
+      position: absolute;
+      left: 460px;
+      top: 1560px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: #ff3b30;
+      display: grid;
+      place-items: center;
+    }
+  </style>
+  <div id="root" data-composition-id="appel" data-width="1080" data-height="1920" data-layout-allow-overlap>
+    <div id="p-in">
+      <div id="p-av"><svg width="90" height="90" viewBox="0 0 24 24" fill="#d5d8f0"><circle cx="12" cy="8" r="4.5" /><path d="M3 21c1.5-4.5 5-6.5 9-6.5s7.5 2 9 6.5Z" /></svg></div>
+      <div id="p-name">+33 6 •• •• 41 18</div>
+      <div id="p-timer">appel…</div>
+      <div class="tk"><span id="p-t1">8 h 02 : premier appel.</span><span id="p-t2">Au prospect <em class="acc">le plus chaud.</em></span></div>
+      <div id="p-grid" data-layout-ignore>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" /><path d="M3 3l18 18" /></svg></i>silence</div>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="#ffffff"><circle cx="6" cy="5" r="1.8" /><circle cx="12" cy="5" r="1.8" /><circle cx="18" cy="5" r="1.8" /><circle cx="6" cy="11" r="1.8" /><circle cx="12" cy="11" r="1.8" /><circle cx="18" cy="11" r="1.8" /><circle cx="6" cy="17" r="1.8" /><circle cx="12" cy="17" r="1.8" /><circle cx="18" cy="17" r="1.8" /></svg></i>clavier</div>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" /></svg></i>haut-parleur</div>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg></i>ajouter</div>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="3" /><path d="M16 10.5l6-3.5v10l-6-3.5" /></svg></i>FaceTime</div>
+        <div class="b"><i><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.2-4 4.5-6 8-6s6.8 2 8 6" /></svg></i>contacts</div>
+      </div>
+      <div id="p-end" data-layout-ignore><svg width="70" height="70" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 9c-3.5 0-6.8 1-9.4 2.9-.6.4-.8 1.2-.5 1.9l1.3 2.4c.3.6 1 .9 1.7.7l3-1c.6-.2 1-.8.9-1.4l-.2-1.6c2-.7 4.4-.7 6.4 0l-.2 1.6c-.1.6.3 1.2.9 1.4l3 1c.7.2 1.4-.1 1.7-.7l1.3-2.4c.3-.7.1-1.5-.5-1.9C18.8 10 15.5 9 12 9Z" /></svg></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const T = window.T;
+      const L = (t) => t - 14.3;
+      const tl = gsap.timeline({ paused: true });
+      const timer = document.querySelector('[data-composition-id="appel"] #p-timer');
+      // Le balayage depuis la console
+      tl.fromTo("#p-in", { x: 700, filter: "blur(16px)", opacity: 0 }, { x: 0, filter: "blur(0px)", opacity: 1, duration: 0.3, ease: "power3.out" }, 0.05);
+      // « appel… », puis la minuterie tourne (calculée depuis le temps du film)
+      const clock = { t: 0 };
+      const show = () => {
+        const s = clock.t - 0.9;
+        if (s < 0) {
+          timer.textContent = "appel…";
+        } else {
+          const n = Math.floor(s);
+          timer.textContent = "00:0" + Math.min(9, n);
+        }
+      };
+      tl.fromTo(clock, { t: 0 }, { t: 4.4, duration: 4.4, ease: "none", onUpdate: show }, 0);
+      show();
+      tl.fromTo(["#p-t1", "#p-t2"], { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power2.out", stagger: 0.12 }, L(T.callTitle));
+      window.__timelines["appel"] = tl;
+    })();
+  </script>
+</template>
