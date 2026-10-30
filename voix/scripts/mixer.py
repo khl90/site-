@@ -29,7 +29,8 @@ for film, video in VIDEOS.items():
         # elle est accélérée (au plus ×1,2, sans changer la hauteur), puis la suivante attend qu'elle finisse
         start = max(m["start"], cursor)
         nxt = lines[k + 1]["start"] if k + 1 < len(lines) else total - 0.3
-        tempo = min(1.2, max(1.0, m["dur"] / max(0.1, nxt - 0.15 - start)))
+        cap = 1.3 if k + 1 == len(lines) else 1.2  # la signature finale doit tenir avant la fin du film
+        tempo = min(cap, max(1.0, m["dur"] / max(0.1, nxt - 0.15 - start)))
         cursor = start + m["dur"] / tempo + 0.15
         print(f"  {film} l{m['n']:02d} à {start:.2f} s, ×{tempo:.2f}, fin {cursor - 0.15:.2f} s")
         ms = int(start * 1000)

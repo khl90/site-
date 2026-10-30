@@ -14,7 +14,7 @@ Fichier sans son : `coltadol-23h47/export/coltadol-23h47-muet.mp4`
 | 10,0 s | 12,5 s | Puis le récapitulatif, et un conseiller qui rappellera. |
 | 14,8 s | 16,0 s | Personne n'était au bureau. |
 | 16,3 s | 17,2 s | C'était Coltadol. |
-| 18,0 s | 21,4 s | Score quatre-vingt-douze. Prospect chaud. Prêt pour votre équipe. |
+| 18,0 s | 21,4 s | Un score de quatre-vingt-douze. Un prospect chaud, prêt pour votre équipe. |
 | 22,6 s | 25,6 s | Coltadol. Essayez-le quatorze jours, gratuitement. |
 
 ## « C'est juste un chatbot ? » — version vidéo du carrousel (9:16, 22 s)
@@ -57,4 +57,4 @@ Fichier sans son : `coltadol-lancement/export/coltadol-lancement-16x9-muet.mp4`
 | 19,3 s | 21,8 s | Ceux qui se taisent ? Il vous prépare la relance. |
 | 22,3 s | 25,2 s | Et à huit heures, vous savez qui appeler. |
 | 26,0 s | 28,4 s | Pas un seul prospect sans réponse. |
-| 29,4 s | 32,6 s | Coltadol. Votre responsable commercial IA. Essai gratuit. |
+| 29,4 s | 32,6 s | Coltadol. Votre responsable commercial IA. Essayez-le gratuitement. |
