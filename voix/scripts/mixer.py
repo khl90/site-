@@ -1,15 +1,18 @@
 """Pose les voix générées sur chaque vidéo : chaque phrase à son temps, les effets baissés
 sous la voix (sidechain), le tout normalisé à −14 LUFS. Écrit export/<film>-voix.mp4."""
-import json, subprocess, pathlib, sys
+import json, os, subprocess, pathlib, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+VOIX = os.environ.get("VOIX_OUT", "voix")
+SUFFIX = os.environ.get("VOIX_SUFFIX", "-voix")
 VIDEOS = {
     "coltadol-23h47": "coltadol-23h47/export/coltadol-23h47.mp4",
     "coltadol-chatbot": "coltadol-chatbot/export/coltadol-chatbot.mp4",
     "coltadol-8h": "coltadol-8h/export/coltadol-8h.mp4",
     "coltadol-lancement": "coltadol-lancement/export/coltadol-lancement-16x9.mp4",
+    "coltadol-deux-agences": "coltadol-deux-agences/export/coltadol-deux-agences.mp4",
 }
-man = json.loads((ROOT / "voix/manifest.json").read_text())
+man = json.loads((ROOT / VOIX / "manifest.json").read_text())
 only = sys.argv[1:]
 for film, video in VIDEOS.items():
     if only and film not in only:
@@ -18,8 +21,9 @@ for film, video in VIDEOS.items():
     if not lines:
         continue
     src = ROOT / video
-    out = src.with_name(src.stem + "-voix.mp4")
+    out = src.with_name(src.stem + SUFFIX + ".mp4")
     inputs = ["-i", str(src)]
+    has_audio = bool(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", str(src)], capture_output=True, text=True).stdout.strip())
     chains = []
     total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(src)], capture_output=True, text=True).stdout)
     cursor = 0.0
@@ -38,7 +42,9 @@ for film, video in VIDEOS.items():
     n = len(lines)
     graph = ";".join(chains)
     graph += ";" + "".join(f"[v{k}]" for k in range(n)) + f"amix=inputs={n}:normalize=0,asplit=2[voix][sc]"
-    graph += ";[0:a]aresample=48000,volume=0.8[fx];[fx][sc]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=300[fxd]"
+    # une vidéo sans piste son (« Deux agences ») reçoit un silence à la place des effets
+    fx_src = "[0:a]aresample=48000" if has_audio else f"anullsrc=r=48000:cl=stereo,atrim=0:{total}"
+    graph += f";{fx_src},volume=0.8[fx];[fx][sc]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=300[fxd]"
     graph += ";[voix][fxd]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]"
     cmd = ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", graph, "-map", "0:v", "-map", "[a]",
            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", str(out)]

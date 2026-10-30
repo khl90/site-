@@ -58,3 +58,19 @@ Fichier sans son : `coltadol-lancement/export/coltadol-lancement-16x9-muet.mp4`
 | 22,3 s | 25,2 s | Et à huit heures, vous savez qui appeler. |
 | 26,0 s | 28,4 s | Pas un seul prospect sans réponse. |
 | 29,4 s | 32,6 s | Coltadol. Votre responsable commercial IA. Essayez-le gratuitement. |
+
+## « Deux agences » — reel 3D (9:16, 32 s)
+
+Fichier sans son : `coltadol-deux-agences/export/coltadol-deux-agences.mp4`
+
+| Début | Fin | Phrase |
+|---|---|---|
+| 0,3 s | 5,0 s | Yasmine et Thomas : deux agences, même rue, mêmes biens. |
+| 5,2 s | 8,4 s | Pourtant, seul l'agenda de Yasmine est plein. |
+| 8,6 s | 13,2 s | Un acheteur écrit aux deux. Elle répond, lui dort. |
+| 13,4 s | 16,3 s | Près de sept fois plus de chances d'échanger. |
+| 16,6 s | 20,0 s | Les silencieux ? Chez elle, une relance est prête. |
+| 20,2 s | 21,3 s | Elle relit, et l'envoie. |
+| 22,3 s | 25,0 s | Chaque matin, son rapport dit qui appeler. |
+| 25,2 s | 28,5 s | Même rue, mêmes biens. La différence, c'est Coltadol. |
+| 28,7 s | 31,9 s | Un mot en commentaire, et le lien arrive. |
