@@ -1,0 +1,130 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    #f-ground {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(60% 50% at 50% 110%, rgb(255 179 71 / 0.12), transparent 70%),
+        radial-gradient(70% 60% at 50% -10%, #1a2462, transparent 70%),
+        #0b1130;
+    }
+    #f-lock {
+      position: absolute;
+      left: 606px;
+      top: 236px;
+      width: 707px;
+      height: 170px;
+    }
+    #f-mark {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    #f-word {
+      position: absolute;
+      left: 210px;
+      top: 17px;
+    }
+    #f-tag {
+      position: absolute;
+      left: 0;
+      top: 470px;
+      width: 1920px;
+      text-align: center;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 80%;
+      font-size: 108px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    #f-tag .w {
+      display: inline-block;
+    }
+    #f-cta {
+      position: absolute;
+      left: 0;
+      top: 646px;
+      width: 1920px;
+      text-align: center;
+    }
+    #f-btn {
+      display: inline-block;
+      background: #5ce6a5;
+      color: #0b1130;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 85%;
+      font-size: 54px;
+      line-height: 1;
+      padding: 26px 54px 30px;
+      border-radius: 24px;
+    }
+    #f-fine {
+      position: absolute;
+      left: 0;
+      top: 796px;
+      width: 1920px;
+      text-align: center;
+      font: 500 34px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #f-url {
+      position: absolute;
+      left: 0;
+      top: 852px;
+      width: 1920px;
+      text-align: center;
+      font: 700 38px/1.2 "DM Sans", sans-serif;
+    }
+  </style>
+  <div id="root" data-composition-id="fin" data-width="1920" data-height="1080">
+    <div id="f-ground" class="clip" data-start="0" data-duration="4.6" data-track-index="5"></div>
+    <div id="f-lock" class="clip" data-start="0" data-duration="4.6" data-track-index="0">
+      <svg id="f-mark" viewBox="0 0 32 32" width="170" height="170">
+        <path id="f-ring" fill="none" stroke="#eef0fa" stroke-linecap="round" stroke-width="4" d="M23.55 7.71a10.5 10.5 0 1 0 0 14.58" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" />
+        <path id="f-tail" fill="#eef0fa" stroke="#eef0fa" stroke-linejoin="round" stroke-width="1.6" d="M6.9 20.25 4.5 28l6.25-3.9Z" />
+        <circle id="f-dot" cx="26.2" cy="15" r="3.8" fill="#5ce6a5" />
+      </svg>
+      <svg id="f-word" viewBox="34 4 80.5 22" width="497" height="136"><path fill="#eef0fa" d="M40.62 25.35q-1.83 0-3.03-.67-1.21-.68-1.88-1.96-.68-1.28-.96-3.13t-.28-4.24q0-2.17.25-4.03.25-1.85.9-3.2.64-1.36 1.85-2.11t3.09-.75q1.79 0 2.93.65 1.13.65 1.69 1.74t.64 2.47-.17 2.85l-4.24.47q.18-1.47.12-2.53t-.35-1.62q-.3-.55-.83-.55-.38 0-.63.33-.25.34-.4 1.06-.14.72-.22 1.88-.07 1.17-.07 2.81 0 2.65.15 4.21t.47 2.22.82.66q.68 0 .96-.87.28-.86.29-2.23.02-1.37-.16-2.84l4.35.56q.35 2.23.18 3.9-.18 1.66-.87 2.75-.69 1.08-1.85 1.63t-2.75.54m11.73 0q-1.97 0-3.17-.94-1.21-.94-1.75-2.73-.55-1.8-.55-4.39 0-2.88.62-4.69t1.85-2.64q1.24-.84 3.06-.84 2 0 3.22.84 1.22.83 1.78 2.6.56 1.76.56 4.62 0 2.85-.62 4.66-.61 1.81-1.85 2.66t-3.15.85m.06-3.26q.38 0 .59-.44t.29-1.44q.09-1 .09-2.68 0-1.91-.09-3.03T53 12.9q-.21-.49-.59-.49t-.59.49-.28 1.61q-.07 1.14-.07 3.08 0 2.5.19 3.5t.75 1M58.94 25V5h4.47v20Zm10.8.24q-2.3 0-3.58-1.39-1.28-1.38-1.28-4.23v-6.65h-.85v-3h.38q.94 0 1.27-.48Q66 9 66.12 8l.17-1.44h3v2.91h2.03v3.59h-2.03v5.62q0 1.11.34 1.67t.9.56q.23 0 .43-.09t.36-.26V25q-.38.12-.76.18t-.82.06m5.41.11q-.94 0-1.66-.44-.73-.44-1.14-1.26t-.41-1.97q0-1.33.47-2.21t1.21-1.46q.73-.57 1.54-.91t1.46-.57q.73-.27 1.13-.56t.54-.69.15-.99q0-.82-.23-1.23t-.68-.41q-.41 0-.65.36-.23.37-.29 1.12t.06 1.9l-4.41-.47q-.09-1.56.23-2.77.32-1.2 1.02-2.03.69-.82 1.75-1.23 1.05-.41 2.47-.41 1.7 0 2.86.69 1.17.69 1.75 2.12.59 1.42.59 3.69V25h-3.94v-3.97h-.23q-.12 1.41-.59 2.38t-1.24 1.46q-.76.48-1.76.48m2.06-3.64q.29 0 .51-.18t.37-.5.22-.71q.07-.38.07-.76v-2.09L79 17q-.24.35-.53.6t-.6.44l-.59.4q-.28.21-.49.44t-.33.59q-.14.35-.14.85 0 .8.28 1.09t.61.3M88 25.35q-1.35 0-2.28-.97t-1.4-2.79-.47-4.33q0-2.79.53-4.58.53-1.8 1.4-2.65t1.93-.85q.94 0 1.57.61.63.62 1.03 1.78t.6 2.81h.3q-.18-1-.31-1.94-.14-.94-.22-1.78-.09-.84-.09-1.54V5h4.53v20h-3.88v-4.44H91q-.15 1.82-.54 2.88-.4 1.06-1.02 1.49t-1.44.42m1.41-3.41q.3 0 .52-.32.22-.33.36-.87.15-.54.22-1.22t.08-1.38v-.62q0-.77-.06-1.44-.06-.68-.16-1.24t-.25-.95q-.15-.4-.33-.61-.17-.2-.41-.2-.29 0-.5.45-.2.46-.31 1.45-.1.98-.1 2.54 0 1.38.09 2.38t.29 1.52.56.51m12.15 3.41q-1.97 0-3.18-.94-1.2-.94-1.75-2.73-.54-1.8-.54-4.39 0-2.88.62-4.69.61-1.81 1.85-2.64 1.23-.84 3.06-.84 2 0 3.22.84 1.22.83 1.78 2.6.56 1.76.56 4.62 0 2.85-.62 4.66t-1.85 2.66-3.15.85m.06-3.26q.38 0 .59-.44t.29-1.44.09-2.68q0-1.91-.09-3.03t-.29-1.6-.59-.49-.59.49-.28 1.61q-.07 1.14-.07 3.08 0 2.5.19 3.5t.75 1m6.53 2.91V5h4.47v20Z" /></svg>
+    </div>
+    <div id="f-tag" class="clip" data-start="1.3" data-duration="3.3" data-track-index="1"><span id="f-w0" class="w">Votre</span> <span id="f-w1" class="w">responsable</span> <span id="f-w2" class="w">commercial</span> <span id="f-w3" class="w">IA.</span></div>
+    <div id="f-cta" class="clip" data-start="1.85" data-duration="2.75" data-track-index="2"><span id="f-btn">Essai gratuit</span></div>
+    <div id="f-fine" class="clip" data-start="1.95" data-duration="2.65" data-track-index="3">14 jours gratuits, sans carte bancaire.</div>
+    <div id="f-url" class="clip" data-start="2.05" data-duration="2.55" data-track-index="4">coltadol.com</div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#f-ground", { opacity: 0 }, { opacity: 0.9, duration: 0.45, ease: "power2.inOut" }, 0);
+      tl.fromTo("#f-ring", { attr: { "stroke-dashoffset": 110 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.55, ease: "power2.inOut" }, 0.2);
+      tl.fromTo("#f-tail", { opacity: 0, scale: 0.2, transformOrigin: "30% 70%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)" }, 0.62);
+      tl.fromTo("#f-dot", { opacity: 0, scale: 0, y: -14, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "elastic.out(1, 0.45)" }, 0.88);
+      tl.fromTo("#f-word", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.out" }, 1.08);
+      ["#f-w0", "#f-w1", "#f-w2", "#f-w3"].forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power2.out" }, 1.32 + i * 0.08);
+      });
+      tl.fromTo("#f-btn", { opacity: 0, scale: 0.7, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "back.out(2)" }, 1.9);
+      tl.fromTo("#f-fine", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 1.97);
+      tl.fromTo("#f-url", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 2.07);
+      window.__timelines["fin"] = tl;
+    })();
+  </script>
+</template>

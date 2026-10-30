@@ -1,0 +1,81 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    /* Les titres : larges, serrés, posés à gauche, immobiles une fois arrivés */
+    .t {
+      position: absolute;
+      left: 192px;
+      top: 150px;
+      width: 1100px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 800;
+      font-stretch: 80%;
+      font-size: 96px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #eef0fa;
+    }
+    .t .w {
+      display: inline-block;
+    }
+    .t .big {
+      font-size: 168px;
+    }
+    .t .sig {
+      color: #5ce6a5;
+    }
+    .t .lamp {
+      color: #ffb347;
+    }
+    .t.side {
+      top: 300px;
+      width: 640px;
+      font-size: 84px;
+    }
+    .t.mid {
+      left: 0;
+      top: 330px;
+      width: 1920px;
+      text-align: center;
+      font-size: 136px;
+    }
+  </style>
+  <div id="root" data-composition-id="titres" data-width="1920" data-height="1080">
+    <div id="t1" class="clip t" data-start="0" data-duration="3.05" data-track-index="0"><span class="w big">19&nbsp;h&nbsp;02.</span><br /><span class="w">Les</span> <span class="w">agences</span> <span class="w">ferment.</span></div>
+    <div id="t2" class="clip t" data-start="3.2" data-duration="3.2" data-track-index="0"><span class="w">Les</span> <span class="w">acheteurs,</span> <span class="w">eux,</span><br /><span class="w">écrivent</span> <span class="w">toute</span> <span class="w">la</span> <span class="w">nuit.</span></div>
+    <div id="t3" class="clip t" data-start="6.55" data-duration="3.5" data-track-index="0"><span class="w sig">Coltadol</span> <span class="w">répond</span><br /><span class="w">à</span> <span class="w">chacun.</span></div>
+    <div id="t4" class="clip t side" data-start="10.6" data-duration="4.15" data-track-index="0"><span class="w">Une</span> <span class="w">conversation</span> <span class="w">devient</span> <span class="w">un</span> <span class="w">prospect</span> <span class="w sig">qualifié.</span></div>
+    <div id="t5" class="clip t" data-start="15.25" data-duration="3.6" data-track-index="0"><span class="w">De</span> <span class="w">jour</span> <span class="w">comme</span><br /><span class="w">de</span> <span class="w">nuit.</span></div>
+    <div id="t6" class="clip t side" data-start="19.2" data-duration="2.75" data-track-index="0"><span class="w">Les</span> <span class="w">prospects</span> <span class="w">qui</span> <span class="w lamp">se</span> <span class="w lamp">taisent</span> <span class="w">vous</span> <span class="w">reviennent.</span></div>
+    <div id="t7" class="clip t side" data-start="22.25" data-duration="3.15" data-track-index="0"><span class="w">Chaque</span> <span class="w">matin,</span> <span class="w">une</span> <span class="w">page&nbsp;:</span> <span class="w sig">qui</span> <span class="w sig">appeler</span> <span class="w">et</span> <span class="w">quoi</span> <span class="w">proposer.</span></div>
+    <div id="t8" class="clip t mid" data-start="25.9" data-duration="2.7" data-track-index="0"><span class="w">Aucun</span> <span class="w">prospect</span> <span class="w sig">sans</span> <span class="w sig">réponse.</span></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const root = document.querySelector('[data-composition-id="titres"]');
+      // Chaque titre entre mot par mot (flou → net), tient immobile, puis sort en flou
+      root.querySelectorAll(".t").forEach((t) => {
+        const start = parseFloat(t.dataset.start);
+        const end = start + parseFloat(t.dataset.duration);
+        const ws = t.querySelectorAll(".w");
+        ws.forEach((w, i) => {
+          // le premier titre est déjà là à la première image : c'est la couverture
+          if (t.id !== "t1") tl.fromTo(w, { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out" }, start + 0.05 + i * 0.07);
+          tl.to(w, { opacity: 0, filter: "blur(10px)", duration: 0.16, ease: "power2.in" }, end - 0.22 + i * 0.015);
+        });
+      });
+      window.__timelines["titres"] = tl;
+    })();
+  </script>
+</template>

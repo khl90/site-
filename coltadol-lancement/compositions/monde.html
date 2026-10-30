@@ -1,0 +1,379 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #04071a;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    /* La ville de toute la nuit : 10 240 px de large, que la caméra traverse */
+    #m-track {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 10240px;
+      height: 1080px;
+      transform-origin: 0 0;
+      /* le zénith se fond dans le fond de la page : pas de bord quand la ville recule */
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+      mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+    }
+    #m-city {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    #m-live {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+    }
+    /* Une demande : la bulle au-dessus de sa fenêtre, ambre tant qu'elle attend, verte une fois répondue */
+    .eq {
+      position: absolute;
+      top: 372px;
+      width: 560px;
+      border-radius: 28px;
+      border-bottom-left-radius: 8px;
+      background: rgb(17 26 66 / 0.94);
+      border: 3px solid #ffb347;
+      padding: 18px 24px 20px;
+      box-shadow: 0 30px 60px -30px rgb(3 6 24 / 0.9);
+      opacity: 0;
+    }
+    .eq-h {
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    .eq-b {
+      margin-top: 6px;
+      font: 500 35px/1.3 "DM Sans", sans-serif;
+    }
+    .eq-a {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font: 600 28px/1.2 "DM Sans", sans-serif;
+      color: #5ce6a5;
+      opacity: 0;
+    }
+    .eq-a i {
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #5ce6a5;
+    }
+    .ln {
+      position: absolute;
+      width: 3px;
+      background: #ffb347;
+      opacity: 0;
+    }
+    #m-dim {
+      position: absolute;
+      inset: 0;
+      background: #070b24;
+      opacity: 0;
+    }
+    /* L'horloge de la nuit */
+    #m-clock {
+      position: absolute;
+      right: 200px;
+      top: 92px;
+      text-align: right;
+    }
+    #m-clock small {
+      display: block;
+      font: 500 28px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+      letter-spacing: 0.02em;
+    }
+    #m-time {
+      display: block;
+      margin-top: 8px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 85%;
+      font-size: 104px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
+    }
+  </style>
+  <div id="root" data-composition-id="monde" data-width="1920" data-height="1080" data-layout-allow-overlap>
+    <div id="m-track" data-layout-allow-overflow>
+      <canvas id="m-city" width="10240" height="1080"></canvas>
+      <div id="m-eqs"></div>
+    </div>
+    <canvas id="m-live" width="1920" height="1080"></canvas>
+    <div id="m-dim"></div>
+    <div id="m-clock"><small>Sur WhatsApp, cette nuit</small><span id="m-time">19:02</span></div>
+  </div>
+  <script>
+    Promise.all([document.fonts.load('500 35px "DM Sans"'), document.fonts.load('600 30px "DM Sans"'), document.fonts.load('700 104px "Bricolage"')]).then(function () {
+      const N = window.N;
+      const root = document.querySelector('[data-composition-id="monde"]');
+      const $ = (s) => root.querySelector(s);
+      const W = N.W;
+      const HT = 1080;
+      function seeded(seed) {
+        let s = seed >>> 0;
+        return () => {
+          s = (s + 0x6d2b79f5) | 0;
+          let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const hourAtX = (x) => Math.min(32, Math.max(19, 19 + (x - N.X0) / N.PX_PER_H));
+
+      // ------------------------------------------------- le ciel, heure par heure
+      const KEYS = [
+        [19, [26, 36, 98], [64, 58, 128], 0.36],
+        [21, [11, 17, 48], [26, 36, 98], 0.14],
+        [24, [4, 7, 26], [17, 26, 66], 0.07],
+        [28, [4, 7, 26], [17, 26, 66], 0.07],
+        [30.5, [16, 24, 76], [56, 58, 132], 0.24],
+        [32, [36, 52, 128], [92, 92, 160], 0.4],
+      ];
+      const lerp = (a, b, p) => a + (b - a) * p;
+      function skyAt(h) {
+        for (let i = 0; i < KEYS.length - 1; i++) {
+          const [h0, t0, b0, g0] = KEYS[i];
+          const [h1, t1, b1, g1] = KEYS[i + 1];
+          if (h >= h0 && h <= h1) {
+            const p = (h - h0) / (h1 - h0);
+            return [t0.map((v, k) => lerp(v, t1[k], p)), b0.map((v, k) => lerp(v, b1[k], p)), lerp(g0, g1, p)];
+          }
+        }
+        return [KEYS[KEYS.length - 1][1], KEYS[KEYS.length - 1][2], KEYS[KEYS.length - 1][3]];
+      }
+      const cv = $("#m-city");
+      const ctx = cv.getContext("2d");
+      const rgb = (c, a) => "rgba(" + c.map(Math.round).join(",") + "," + (a === undefined ? 1 : a) + ")";
+      for (let x = 0; x < W; x += 8) {
+        const [top, bot, glow] = skyAt(hourAtX(x + 4));
+        const g = ctx.createLinearGradient(0, 0, 0, HT);
+        g.addColorStop(0, rgb(top));
+        g.addColorStop(1, rgb(bot));
+        ctx.fillStyle = g;
+        ctx.fillRect(x, 0, 8, HT);
+        const a = ctx.createLinearGradient(0, HT * 0.45, 0, HT);
+        a.addColorStop(0, "rgba(255,179,71,0)");
+        a.addColorStop(1, "rgba(255,179,71," + glow + ")");
+        ctx.fillStyle = a;
+        ctx.fillRect(x, HT * 0.45, 8, HT * 0.55);
+      }
+
+      // ------------------------------------------------- les tours de la landing
+      const rand = seeded(20261030);
+      const LAYERS = [
+        { body: "#18225c", w: 6, h: 9, gx: 10, gy: 14, minH: 0.42, maxH: 0.64 },
+        { body: "#0e1542", w: 12, h: 17, gx: 15, gy: 22, minH: 0.3, maxH: 0.52 },
+        { body: "#060a22", w: 22, h: 30, gx: 22, gy: 32, minH: 0.18, maxH: 0.36 },
+      ];
+      const wins = [];
+      LAYERS.forEach((L, li) => {
+        let x = -20;
+        while (x < W + 20) {
+          const cols = 3 + Math.floor(rand() * (li === 2 ? 5 : 7));
+          const tw = cols * (L.w + L.gx) + L.gx;
+          const th = HT * (L.minH + rand() * (L.maxH - L.minH));
+          ctx.fillStyle = L.body;
+          ctx.fillRect(x, HT - th, tw, th);
+          if (li === 2) {
+            ctx.fillStyle = "rgba(143,152,198,0.16)";
+            ctx.fillRect(x, HT - th, tw, 2);
+          }
+          const rows = Math.floor((th - L.gy) / (L.h + L.gy));
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              if (rand() < 0.08) continue;
+              const w = { x: x + L.gx + c * (L.w + L.gx), y: HT - th + L.gy * 1.4 + r * (L.h + L.gy), w: L.w, h: L.h, li, amb: rand() < 0.16 };
+              wins.push(w);
+              if (w.amb) {
+                ctx.fillStyle = "rgba(190,200,240," + (0.06 + rand() * 0.1) + ")";
+                ctx.fillRect(w.x, w.y, w.w, w.h);
+              }
+            }
+          }
+          x += tw + (li === 2 ? 12 + rand() * 30 : 6 + rand() * 14);
+        }
+      });
+      // Les heures, en règle au pied de la ville
+      ctx.font = '600 30px "DM Sans"';
+      ctx.textAlign = "center";
+      for (let h = 20; h <= 32; h++) {
+        const x = N.X0 + (h - 19) * N.PX_PER_H;
+        ctx.fillStyle = "rgba(238,240,250,0.35)";
+        ctx.fillRect(x - 1, 1046, 2, 20);
+        ctx.fillStyle = "rgba(238,240,250,0.75)";
+        ctx.fillText((h % 24) + " h", x, 1034);
+      }
+      // grain, pour que le ciel ne se mette pas en bandes
+      const img = ctx.getImageData(0, 0, W, HT);
+      const nr = seeded(5);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const n = (nr() - 0.5) * 6;
+        img.data[i] += n;
+        img.data[i + 1] += n;
+        img.data[i + 2] += n;
+      }
+      ctx.putImageData(img, 0, 0);
+
+      // ---------------------------- les fenêtres des demandes, et celles de la nuit
+      const nearest = (px, py, li, used) => {
+        let best = null;
+        let bd = 1e12;
+        wins.forEach((w) => {
+          if (w.li !== li || w.amb || used.has(w)) return;
+          const d = (w.x + w.w / 2 - px) ** 2 + (w.y + w.h / 2 - py) ** 2;
+          if (d < bd) {
+            bd = d;
+            best = w;
+          }
+        });
+        return best;
+      };
+      const used = new Set();
+      N.EQ.forEach((e) => {
+        e.win = nearest(e.x, 800, 2, used);
+        used.add(e.win);
+      });
+      // Les autres demandes de la nuit : des fenêtres qui s'allument quand la caméra passe, et restent vertes
+      const er = seeded(77);
+      const events = [];
+      wins.forEach((w) => {
+        if (w.amb || used.has(w) || w.li === 0) return;
+        if (er() > 0.06) return;
+        const h = hourAtX(w.x);
+        if (h <= 19.2 || h >= 31.9) return;
+        events.push({ w, on: N.tAt(h) + (er() - 0.3) * 1.2 });
+      });
+
+      // ----------------------------------------------------------- les bulles
+      const host = $("#m-eqs");
+      N.EQ.forEach((e, i) => {
+        const b = document.createElement("div");
+        b.className = "eq";
+        b.id = "m-e" + i;
+        b.style.left = e.win.x + e.win.w / 2 - 20 + "px";
+        b.innerHTML = '<div class="eq-h">' + e.city + " · " + e.time + '</div><div class="eq-b">' + e.text + '</div><div class="eq-a" id="m-a' + i + '"><i></i>' + e.city + ", répondu en " + e.secs + " s</div>";
+        host.appendChild(b);
+      });
+      N.EQ.forEach((e, i) => {
+        const b = $("#m-e" + i);
+        const bottom = 372 + b.offsetHeight;
+        const l = document.createElement("div");
+        l.className = "ln";
+        l.id = "m-l" + i;
+        l.style.left = e.win.x + e.win.w / 2 - 1.5 + "px";
+        l.style.top = bottom + "px";
+        l.style.height = Math.max(0, e.win.y - bottom - 10) + "px";
+        host.appendChild(l);
+      });
+
+      // ------------------------------------------- la caméra, image par image
+      const track = $("#m-track");
+      const live = $("#m-live").getContext("2d");
+      const timeEl = $("#m-time");
+      const LAMP = [255, 179, 71];
+      const SIGNAL = [92, 230, 165];
+      // Le recul final : la moitié de la nuit d'un coup d'œil, toutes ses fenêtres vertes, posée en bas de l'écran
+      const ZOOM_S = 0.42;
+      const ease = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+      function view(t) {
+        // centre de l'écran en coordonnées de la ville, et échelle (le grand recul de la fin)
+        const cx0 = N.camX(t) + 960;
+        if (t < N.payoff) return { cx: cx0, s: 1 };
+        const p = ease(Math.min(1, (t - N.payoff) / 2.3));
+        return { cx: lerp(cx0, W / 2, p), s: lerp(1, ZOOM_S, p) };
+      }
+      function lit(w, col, a, ringAge) {
+        const g = w.li === 2 ? 10 : 5;
+        live.fillStyle = rgb(col, 0.18 * a);
+        live.fillRect(w.x - g, w.y - g, w.w + g * 2, w.h + g * 2);
+        live.fillStyle = rgb(col, a);
+        live.fillRect(w.x, w.y, w.w, w.h);
+        if (ringAge >= 0 && ringAge < 0.7) {
+          const p = ringAge / 0.7;
+          live.strokeStyle = rgb(SIGNAL, 0.6 * (1 - p));
+          live.lineWidth = 2.5;
+          live.beginPath();
+          live.arc(w.x + w.w / 2, w.y + w.h / 2, (w.li === 2 ? 46 : 24) * p, 0, Math.PI * 2);
+          live.stroke();
+        }
+      }
+      function windowAt(w, t, on, ans) {
+        if (t < on) return;
+        if (t < ans) {
+          const age = t - on;
+          lit(w, LAMP, age < 0.26 ? (Math.sin(age * 55) > -0.2 ? 0.55 + age * 1.6 : 0.2) : 0.95, -1);
+        } else lit(w, SIGNAL, 1, t - ans);
+      }
+      function render(t) {
+        const { cx, s } = view(t);
+        const tx = 960 - cx * s;
+        // pendant le recul, la ville se pose sur le bas de l'écran (une affiche : le titre dans le ciel)
+        const anchor = t < N.payoff ? 0 : ease(Math.min(1, (t - N.payoff) / 2.3));
+        const ty = lerp(540 - 540 * s, 1080 - 1080 * s, anchor);
+        track.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + s + ")";
+        live.setTransform(1, 0, 0, 1, 0, 0);
+        live.clearRect(0, 0, 1920, 1080);
+        live.setTransform(s, 0, 0, s, tx, ty);
+        events.forEach((ev) => windowAt(ev.w, t, ev.on, ev.on + 0.55));
+        N.EQ.forEach((e) => windowAt(e.win, t, e.t, e.t + 0.6));
+        // l'horloge
+        const h = N.H(Math.min(t, N.payoff));
+        const mins = Math.floor((h - Math.floor(h)) * 60 + 1e-6);
+        const hh = Math.floor(h) % 24;
+        timeEl.textContent = String(hh).padStart(2, "0") + ":" + String(mins).padStart(2, "0");
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const clock = { t: 0 };
+      tl.fromTo(clock, { t: 0 }, { t: N.end, duration: N.end, ease: "none", onUpdate: () => render(clock.t) }, 0);
+
+      // Les bulles : elles s'ouvrent depuis leur fenêtre, puis la réponse arrive
+      N.EQ.forEach((e, i) => {
+        tl.fromTo("#m-l" + i, { opacity: 0, scaleY: 0, transformOrigin: "50% 100%" }, { opacity: 1, scaleY: 1, duration: 0.25, ease: "power2.out" }, e.t);
+        tl.fromTo("#m-e" + i, { opacity: 0, scale: 0.7, y: 30, transformOrigin: "0% 100%" }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "expo.out" }, e.t + 0.08);
+        tl.fromTo("#m-e" + i, { borderColor: "#ffb347" }, { borderColor: "#5ce6a5", duration: 0.2, immediateRender: false }, e.t + 0.6);
+        tl.fromTo("#m-l" + i, { backgroundColor: "#ffb347" }, { backgroundColor: "#5ce6a5", duration: 0.2, immediateRender: false }, e.t + 0.6);
+        tl.fromTo("#m-a" + i, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, e.t + 0.62);
+      });
+      // Lyon (23:47) devient la fiche : sa bulle s'efface sous l'insert
+      tl.to(["#m-e3", "#m-l3"], { opacity: 0, duration: 0.2 }, N.fiche + 0.15);
+      // Le monde s'assombrit sous les inserts produit
+      tl.fromTo("#m-dim", { opacity: 0 }, { opacity: 0.62, duration: 0.4, ease: "power2.inOut" }, N.fiche);
+      tl.to("#m-dim", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, N.ficheOut);
+      tl.to("#m-dim", { opacity: 0.62, duration: 0.4, ease: "power2.inOut" }, N.relance);
+      tl.to("#m-dim", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, N.payoff - 0.1);
+      // Les bulles et l'horloge s'effacent sous les inserts ; après le rapport, il ne reste que la nuit, toute répondue
+      tl.fromTo(["#m-eqs", "#m-clock"], { opacity: 1 }, { opacity: 0, duration: 0.3 }, N.fiche);
+      tl.to(["#m-eqs", "#m-clock"], { opacity: 1, duration: 0.3 }, N.ficheOut + 0.1);
+      tl.to(["#m-eqs", "#m-clock"], { opacity: 0, duration: 0.3 }, N.relance);
+
+
+      render(0);
+      window.__timelines["monde"] = tl;
+    });
+  </script>
+</template>

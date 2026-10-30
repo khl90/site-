@@ -1,0 +1,200 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    /* Le Rapport directeur (le même que dans le carrousel), à 0,8 ; il tombe de l'horloge quand elle marque 8:00 */
+    #rp-hold {
+      position: absolute;
+      left: 880px;
+      top: 140px;
+      width: 960px;
+      transform: scale(0.86);
+      transform-origin: 0 0;
+    }
+    #rp-note {
+      position: absolute;
+      left: 880px;
+      top: 972px;
+      width: 826px;
+      text-align: center;
+      font: 500 24px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+
+    /* Le Rapport directeur : la page du matin, aussi envoyée sur WhatsApp à 8 h */
+    .rp-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 960px;
+      height: 880px;
+      border-radius: 48px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), #111a42;
+      box-shadow: 0 50px 100px -40px rgb(3 6 24 / 0.95);
+      padding: 44px 48px;
+    }
+    #rp-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font: 500 28px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #rp-wa {
+      margin-left: auto;
+      border: 2px solid rgb(92 230 165 / 0.45);
+      color: #5ce6a5;
+      border-radius: 999px;
+      padding: 6px 18px 8px;
+      white-space: nowrap;
+    }
+    #rp-hello {
+      margin-top: 20px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 56px;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+    #rp-metrics {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rp-m {
+      border-radius: 24px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: rgb(11 17 48 / 0.5);
+      padding: 14px 20px 12px;
+      height: 160px;
+    }
+    .rp-m dt {
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    .rp-m dd {
+      margin-top: 8px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 64px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .rp-m.rp-lamp dd {
+      color: #ffb347;
+    }
+    #rp-prio-t {
+      margin-top: 26px;
+      font: 600 30px/1.2 "DM Sans", sans-serif;
+    }
+    #rp-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .rp-p {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-radius: 22px;
+      background: rgb(11 17 48 / 0.5);
+      padding: 10px 18px;
+      height: 82px;
+    }
+    .rp-sc {
+      flex: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font: 700 28px/1 "DM Sans", sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    .rp-sc.rp-hot {
+      background: #ffb347;
+      color: #0b1130;
+    }
+    .rp-sc.rp-cold {
+      border: 2px solid rgb(143 152 198 / 0.3);
+      color: #8f98c6;
+    }
+    .rp-p b {
+      font: 600 31px/1.1 "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    .rp-p small {
+      margin-left: auto;
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+      white-space: nowrap;
+    }  </style>
+  <div id="root" data-composition-id="rapport" data-width="1920" data-height="1080" data-layout-allow-overlap>
+    <div id="rp-hold" class="clip" data-start="0" data-duration="3.7" data-track-index="0">
+      <div id="rp-in">
+      <div class="rp-card">
+        <div id="rp-top">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3Z" /></svg>
+          <span>Rapport directeur</span>
+          <span id="rp-wa">Sur WhatsApp à 8 h</span>
+        </div>
+        <div id="rp-hello">Bonjour. Voici ce qui demande votre attention.</div>
+        <dl id="rp-metrics">
+          <div class="rp-m"><dt>Nouveaux prospects</dt><dd id="rp-m0">12</dd></div>
+          <div class="rp-m rp-lamp"><dt>Prospects chauds</dt><dd id="rp-m1">3</dd></div>
+          <div class="rp-m"><dt>Relances en retard</dt><dd id="rp-m2">2</dd></div>
+        </dl>
+        <div id="rp-prio-t">Prospects prioritaires</div>
+        <div id="rp-list">
+          <div class="rp-p" id="rp-p0"><span class="rp-sc rp-hot" id="rp-s0">92</span><b>+33 6 •• •• 41 18</b><small>Achat · T3 · Lyon 6e</small></div>
+          <div class="rp-p" id="rp-p1"><span class="rp-sc rp-hot" id="rp-s1">74</span><b>Sarah M.</b><small>Location · T4 · Villeurbanne</small></div>
+          <div class="rp-p" id="rp-p2"><span class="rp-sc rp-cold">61</span><b>+33 7 •• •• 09 52</b><small>Achat · maison · Écully</small></div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="rp-note" class="clip" data-start="0.3" data-duration="3.2" data-track-index="1" data-layout-ignore>Rapport d'exemple : chiffres et prospects fictifs.</div>
+  </div>
+  <script>
+    (function () {
+      const N = window.N;
+      const root = document.querySelector('[data-composition-id="rapport"]');
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#rp-in", { opacity: 0, scale: 0.4, transformOrigin: "100% 0%" }, { opacity: 1, scale: 1, duration: 0.55, ease: "expo.out" }, 0.05);
+      [12, 3, 2].forEach((v, i) => {
+        const el = root.querySelector("#rp-m" + i);
+        const o = { v: 0 };
+        const show = () => (el.textContent = String(Math.round(o.v)));
+        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: show }, 0.4 + i * 0.1);
+        show();
+      });
+      ["#rp-p0", "#rp-p1", "#rp-p2"].forEach((p, i) => {
+        tl.fromTo(p, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "expo.out" }, 0.9 + i * 0.1);
+      });
+      tl.fromTo(["#rp-s0", "#rp-s1"], { scale: 0.4 }, { scale: 1, duration: 0.45, ease: "back.out(2.4)", stagger: 0.1 }, 1.25);
+      tl.to("#rp-in", { opacity: 0, scale: 0.94, filter: "blur(10px)", duration: 0.28, ease: "power3.in" }, N.rapportOut - N.rapport);
+      window.__timelines["rapport"] = tl;
+    })();
+  </script>
+</template>

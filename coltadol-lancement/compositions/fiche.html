@@ -1,0 +1,386 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Bricolage";
+      src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+    }
+    @font-face {
+      font-family: "DM Sans";
+      src: url("assets/fonts/dm-sans-latin-standard-normal.woff2") format("woff2-variations");
+      font-weight: 100 1000;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      color: #eef0fa;
+      font-family: "DM Sans", sans-serif;
+    }
+    /* La fiche prospect de la console (la même que dans « 23 h 47 »), à 0,8 pour le 16:9 */
+    #fi-hold {
+      position: absolute;
+      left: 880px;
+      top: 110px;
+      width: 960px;
+      height: 1060px;
+      transform: scale(0.8);
+      transform-origin: 0 0;
+    }
+    #fi-morph {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 960px;
+      height: 1060px;
+      border-radius: 48px;
+      background: #111a42;
+      border: 3px solid #ffb347;
+    }
+    #fi-note {
+      position: absolute;
+      left: 880px;
+      top: 972px;
+      width: 768px;
+      text-align: center;
+      font: 500 24px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #fi-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 960px;
+      height: 1060px;
+      border-radius: 48px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), #111a42;
+      box-shadow: 0 50px 100px -40px rgb(3 6 24 / 0.95);
+      opacity: 0;
+    }
+    .fik {
+      font: 500 32px/1.2 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #fi-kicker {
+      position: absolute;
+      left: 52px;
+      top: 54px;
+    }
+    #fi-num {
+      position: absolute;
+      left: 52px;
+      top: 104px;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 72px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    #fi-status {
+      position: absolute;
+      left: 52px;
+      top: 204px;
+      height: 54px;
+      width: 200px;
+    }
+    .fipill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border: 2px solid rgb(143 152 198 / 0.22);
+      border-radius: 999px;
+      padding: 8px 24px;
+      font: 500 30px/1.2 "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    #fi-st-new {
+      color: #8f98c6;
+    }
+    #fi-st-ok {
+      color: #5ce6a5;
+      border-color: rgb(92 230 165 / 0.45);
+      opacity: 0;
+    }
+    #fi-ring {
+      position: absolute;
+      left: 688px;
+      top: 48px;
+      width: 220px;
+      height: 220px;
+    }
+    #fi-ring svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+    #fi-score {
+      position: absolute;
+      left: 0;
+      top: 50px;
+      width: 220px;
+      text-align: center;
+      font-family: "Bricolage", sans-serif;
+      font-weight: 700;
+      font-stretch: 80%;
+      font-size: 92px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    #fi-score-l {
+      position: absolute;
+      left: 0;
+      top: 146px;
+      width: 220px;
+      text-align: center;
+      font: 500 28px/1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    #fi-hotrow {
+      position: absolute;
+      left: 52px;
+      top: 300px;
+      width: 856px;
+      height: 60px;
+    }
+    #fi-hot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #ffb347;
+      color: #0b1130;
+      font: 700 32px/1 "DM Sans", sans-serif;
+      padding: 13px 26px 15px;
+      border-radius: 999px;
+      opacity: 0;
+    }
+    #fi-rule {
+      position: absolute;
+      left: 326px;
+      top: 14px;
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+      white-space: nowrap;
+    }
+    #fi-fields {
+      position: absolute;
+      left: 52px;
+      top: 392px;
+      width: 856px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 124px 124px 164px;
+      gap: 20px;
+    }
+    .fi {
+      position: relative;
+      border-radius: 26px;
+      border: 2px solid rgb(143 152 198 / 0.18);
+      background: rgb(11 17 48 / 0.5);
+      padding: 18px 24px;
+    }
+    .fi-l {
+      font: 500 28px/1.1 "DM Sans", sans-serif;
+      color: #8f98c6;
+    }
+    .fi-v,
+    .fi-e {
+      position: absolute;
+      left: 24px;
+      right: 20px;
+      top: 62px;
+      font: 500 34px/1.22 "DM Sans", sans-serif;
+    }
+    .fi-e {
+      color: rgb(143 152 198 / 0.7);
+    }
+    .fi-v {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      opacity: 0;
+    }
+    .fi-v svg {
+      flex: none;
+      margin-top: 6px;
+    }
+    #fi-foot {
+      position: absolute;
+      left: 52px;
+      top: 880px;
+      width: 856px;
+      border-top: 2px solid rgb(143 152 198 / 0.16);
+      padding-top: 24px;
+    }
+    #fi-miss {
+      position: relative;
+      height: 50px;
+      margin-top: 12px;
+    }
+    #fi-miss-chips {
+      display: flex;
+      gap: 10px;
+    }
+    .fimc {
+      border: 2px dashed rgb(255 179 71 / 0.5);
+      color: #ffb347;
+      border-radius: 999px;
+      padding: 6px 18px;
+      font: 500 28px/1.3 "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    #fi-nothing {
+      position: absolute;
+      left: 0;
+      top: 6px;
+      color: #5ce6a5;
+      font: 500 32px/1.2 "DM Sans", sans-serif;
+      opacity: 0;
+    }
+    #fi-mode {
+      position: absolute;
+      right: 0;
+      top: 24px;
+      text-align: right;
+    }
+    #fi-mode-v {
+      position: relative;
+      height: 44px;
+      width: 330px;
+      margin-top: 12px;
+    }
+    #fi-mode-v span {
+      position: absolute;
+      right: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font: 500 32px/1.3 "DM Sans", sans-serif;
+      white-space: nowrap;
+    }
+    #fi-mode-v i {
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+    #fi-mode-to {
+      color: #ffb347;
+      opacity: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="fiche" data-width="1920" data-height="1080" data-layout-allow-overlap>
+    <div id="fi-hold" class="clip" data-start="0" data-duration="4.6" data-track-index="0">
+      <div id="fi-out">
+        <div id="fi-morph"></div>
+    <div id="fi-card">
+          <div id="fi-kicker" class="fik">Nouveau prospect WhatsApp</div>
+          <div id="fi-num">+33 6 •• •• 41 18</div>
+          <div id="fi-status"><span id="fi-st-new" class="fipill">Nouveau</span><span id="fi-st-ok" class="fipill">Qualifié</span></div>
+          <div id="fi-ring">
+            <svg viewBox="0 0 120 120" width="220" height="220">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(143 152 198 / 0.16)" stroke-width="8" />
+              <circle id="fi-ring-c" cx="60" cy="60" r="52" fill="none" stroke="#5ce6a5" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
+              <line x1="60" y1="3" x2="60" y2="15" stroke="#ffb347" stroke-width="2.5" transform="rotate(252 60 60)" />
+            </svg>
+            <div id="fi-score">0</div>
+            <div id="fi-score-l">score</div>
+          </div>
+          <div id="fi-hotrow"><span id="fi-hot">Prospect chaud</span><span id="fi-rule">Chaud dès 70, ou si l'urgence est haute</span></div>
+          <div id="fi-fields">
+            <div class="fi" id="fi-f-intent"><div class="fi-l">Projet</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Achat</span></div></div>
+            <div class="fi" id="fi-f-type"><div class="fi-l">Type de bien</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>T3 (2 chambres)</span></div></div>
+            <div class="fi" id="fi-f-city"><div class="fi-l">Ville</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Lyon 6e</span></div></div>
+            <div class="fi" id="fi-f-rooms"><div class="fi-l">Chambres</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>2</span></div></div>
+            <div class="fi" id="fi-f-budget"><div class="fi-l">Budget</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>320 k€ – 350 k€</span></div></div>
+            <div class="fi" id="fi-f-urgency"><div class="fi-l">Urgence</div><div class="fi-e">—</div><div class="fi-v"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ce6a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg><span>Haute, fin de bail en nov.</span></div></div>
+          </div>
+          <div id="fi-foot">
+            <div class="fik">Informations manquantes</div>
+            <div id="fi-miss">
+              <div id="fi-miss-chips"><span id="fi-mc-type" class="fimc">type de bien</span><span id="fi-mc-city" class="fimc">ville</span><span id="fi-mc-intent" class="fimc">achat ou location</span><span id="fi-mc-budget" class="fimc">budget</span></div>
+              <span id="fi-nothing">Rien ne manque</span>
+            </div>
+            <div id="fi-mode">
+              <div class="fik">Réponse IA</div>
+              <div id="fi-mode-v">
+                <span id="fi-mode-from"><i style="background: #5ce6a5"></i>Active</span>
+                <span id="fi-mode-to"><i style="background: #ffb347"></i>Passée à l'humain</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fi-note" class="clip" data-start="0.6" data-duration="3.7" data-track-index="1" data-layout-ignore>Conversation et prospect d'exemple.</div>
+  </div>
+  <script>
+    (function () {
+      const N = window.N;
+      const root = document.querySelector('[data-composition-id="fiche"]');
+      const $ = (s) => root.querySelector(s);
+      const tl = gsap.timeline({ paused: true });
+
+      // La bulle de Lyon grandit et devient la fiche (coordonnées de la fiche, avant l'échelle 0,8)
+      const e = N.EQ[3];
+      const bx = (e.x - 20 - N.camX(N.fiche) - 880) / 0.8;
+      const by = (372 - 110) / 0.8;
+      const bw = 560 / 0.8;
+      const bh = 190 / 0.8;
+      const ins = (t, r, b, l, rad) => "inset(" + t + "px " + r + "px " + b + "px " + l + "px round " + rad + "px)";
+      tl.fromTo(
+        "#fi-morph",
+        { clipPath: ins(by, 960 - bx - bw, 1060 - by - bh, bx, 34), borderColor: "#5ce6a5" },
+        { clipPath: ins(0, 0, 0, 0, 48), borderColor: "rgba(143,152,198,0.18)", duration: 0.45, ease: "power3.inOut" },
+        0,
+      );
+      tl.fromTo("#fi-card", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 0.4);
+
+      const fill = (id, at) => {
+        tl.to("#" + id + " .fi-e", { opacity: 0, y: -8, duration: 0.2, ease: "power2.in" }, at);
+        tl.fromTo("#" + id + " .fi-v", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, at + 0.06);
+        tl.fromTo("#" + id, { borderColor: "rgba(143,152,198,0.18)" }, { borderColor: "rgba(92,230,165,0.5)", duration: 0.25 }, at + 0.06);
+      };
+      const strike = (id, at) => tl.to("#" + id, { opacity: 0, scale: 0.8, duration: 0.25, ease: "power2.in" }, at);
+      const t0 = 0.7;
+      fill("fi-f-type", t0);
+      fill("fi-f-city", t0 + 0.12);
+      fill("fi-f-rooms", t0 + 0.24);
+      strike("fi-mc-type", t0 + 0.1);
+      strike("fi-mc-city", t0 + 0.2);
+      fill("fi-f-intent", t0 + 0.55);
+      fill("fi-f-urgency", t0 + 0.67);
+      strike("fi-mc-intent", t0 + 0.6);
+      tl.fromTo("#fi-hot", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, t0 + 0.8);
+      fill("fi-f-budget", t0 + 1.0);
+      strike("fi-mc-budget", t0 + 1.05);
+      tl.fromTo("#fi-nothing", { opacity: 0 }, { opacity: 1, duration: 0.3 }, t0 + 1.4);
+
+      const CIRC = 326.73;
+      const score = { v: 0 };
+      const ringC = $("#fi-ring-c");
+      const scoreEl = $("#fi-score");
+      const show = () => {
+        scoreEl.textContent = String(Math.round(score.v));
+        ringC.setAttribute("stroke-dashoffset", String(CIRC * (1 - score.v / 100)));
+      };
+      tl.fromTo(score, { v: 0 }, { v: 24, duration: 0.5, ease: "power2.out", onUpdate: show }, t0 + 0.1);
+      tl.fromTo(score, { v: 24 }, { v: 58, duration: 0.5, ease: "power2.out", onUpdate: show, immediateRender: false }, t0 + 0.6);
+      tl.fromTo(score, { v: 58 }, { v: 92, duration: 0.7, ease: "power2.out", onUpdate: show, immediateRender: false }, t0 + 1.1);
+      tl.fromTo(ringC, { attr: { stroke: "#5ce6a5" } }, { attr: { stroke: "#ffb347" }, duration: 0.3 }, t0 + 1.45);
+      tl.to("#fi-st-new", { opacity: 0, duration: 0.15 }, t0 + 1.75);
+      tl.fromTo("#fi-st-ok", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t0 + 1.77);
+      tl.to("#fi-mode-from", { opacity: 0, y: -10, duration: 0.2 }, t0 + 2.0);
+      tl.fromTo("#fi-mode-to", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, t0 + 2.07);
+      show();
+
+      // La fiche se range : la nuit continue
+      tl.to("#fi-out", { opacity: 0, scale: 0.94, filter: "blur(10px)", duration: 0.3, ease: "power3.in", transformOrigin: "50% 50%" }, N.ficheOut - N.fiche);
+      window.__timelines["fiche"] = tl;
+    })();
+  </script>
+</template>
