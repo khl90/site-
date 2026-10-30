@@ -21,11 +21,18 @@ for film, video in VIDEOS.items():
     out = src.with_name(src.stem + "-voix.mp4")
     inputs = ["-i", str(src)]
     chains = []
+    total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(src)], capture_output=True, text=True).stdout)
+    cursor = 0.0
     for k, m in enumerate(lines):
         inputs += ["-i", str(ROOT / m["file"])]
-        # une phrase plus longue que sa fenêtre est accélérée (au plus ×1,15, sans changer la hauteur)
-        tempo = min(1.15, max(1.0, m["dur"] / max(0.1, m["window"])))
-        ms = int(m["start"] * 1000)
+        # une phrase peut déborder de sa fenêtre jusqu'à la phrase suivante ; si elle la chevaucherait,
+        # elle est accélérée (au plus ×1,2, sans changer la hauteur), puis la suivante attend qu'elle finisse
+        start = max(m["start"], cursor)
+        nxt = lines[k + 1]["start"] if k + 1 < len(lines) else total - 0.3
+        tempo = min(1.2, max(1.0, m["dur"] / max(0.1, nxt - 0.15 - start)))
+        cursor = start + m["dur"] / tempo + 0.15
+        print(f"  {film} l{m['n']:02d} à {start:.2f} s, ×{tempo:.2f}, fin {cursor - 0.15:.2f} s")
+        ms = int(start * 1000)
         chains.append(f"[{k+1}:a]aresample=48000,aformat=channel_layouts=stereo,atempo={tempo:.3f},adelay={ms}|{ms}[v{k}]")
     n = len(lines)
     graph = ";".join(chains)
