@@ -71,6 +71,6 @@ Fichier sans son : `coltadol-deux-agences/export/coltadol-deux-agences.mp4`
 | 13,4 s | 16,3 s | Près de sept fois plus de chances d'échanger. |
 | 16,6 s | 20,0 s | Les silencieux ? Chez elle, une relance est prête. |
 | 20,2 s | 21,3 s | Elle relit, et l'envoie. |
-| 22,3 s | 25,0 s | Chaque matin, son rapport dit qui appeler. |
-| 25,2 s | 28,5 s | Même rue, mêmes biens. La différence, c'est Coltadol. |
+| 22,3 s | 25,0 s | Chaque matin, elle sait qui appeler. |
+| 25,2 s | 28,5 s | Même rue, mêmes biens. Sa seule différence : Coltadol. |
 | 28,7 s | 31,9 s | Un mot en commentaire, et le lien arrive. |

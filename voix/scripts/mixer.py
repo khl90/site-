@@ -45,7 +45,7 @@ for film, video in VIDEOS.items():
     # une vidéo sans piste son (« Deux agences ») reçoit un silence à la place des effets
     fx_src = "[0:a]aresample=48000" if has_audio else f"anullsrc=r=48000:cl=stereo,atrim=0:{total}"
     graph += f";{fx_src},volume=0.8[fx];[fx][sc]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=300[fxd]"
-    graph += ";[voix][fxd]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]"
+    graph += ";[voix][fxd]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,alimiter=limit=0.84:level=false[a]"
     cmd = ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", graph, "-map", "0:v", "-map", "[a]",
            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", str(out)]
     subprocess.run(cmd, check=True)
